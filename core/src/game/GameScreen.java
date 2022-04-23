@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.MyGdxGame;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -36,13 +37,17 @@ public class GameScreen implements Screen {
     public int walkingAnimationRows = 2, walkingAnimationCols = 5;
     public float walkingAnimationFrameDuration = 0.1f;
     // animation ends
+
+    // poison animation starts
+    float poisonLaunchTime = 5f;
+    ArrayList<Poison> poisons;
+    public final float POISON_MIN_TIME = 40f, POISON_MAX_TIME = 60f;
+    // poison animation ends
     public GameScreen(MyGdxGame game) {
         this.game = game;
         rand = new Random();
 
         bullets = new ArrayList<Bullet>();
-
-        character = new Character();
 
         // background starts
         background1 = new Texture("background1.png");
@@ -68,6 +73,10 @@ public class GameScreen implements Screen {
         walkAnimation = new Animation<TextureRegion>(walkingAnimationFrameDuration, walkFrames);
         walkingStateTime = 0f;
         // animation ends
+
+        // poison animation starts
+        poisons = new ArrayList<>();
+        // poison animation ends
     }
     @Override
     public void show() {
@@ -80,13 +89,13 @@ public class GameScreen implements Screen {
 
         // animation starts
         walkingStateTime += delta;
-        walkingStateTime %= (walkingAnimationFrameDuration * 10);
+        walkingStateTime %= (walkingAnimationFrameDuration * (walkingAnimationRows * walkingAnimationCols));
         reg = (TextureRegion) walkAnimation.getKeyFrame(walkingStateTime);
         // animation ends
 
         // bullet starts
         if (bulletLaunchTime <= 0) {
-            bulletLaunchTime = rand.nextFloat(BULLET_MAX_TIME - BULLET_MIN_TIME) + BULLET_MIN_TIME;
+            bulletLaunchTime = rand.nextFloat() * (BULLET_MAX_TIME - BULLET_MIN_TIME) + BULLET_MIN_TIME;
             bullets.add(new Bullet());
         }
         bulletLaunchTime -= delta;
@@ -101,13 +110,13 @@ public class GameScreen implements Screen {
         bullets.removeAll(bulletToRemove);
 
         // checking if bullet is colliding with character
-        bulletToRemove.clear();
-        for (Bullet bullet : bullets) {
-            if (character.getCollision().isCollide(bullet.getCollision())) {
-                bulletToRemove.add(bullet);
-            }
-        }
-        bullets.removeAll(bulletToRemove);
+//        bulletToRemove.clear();
+//        for (Bullet bullet : bullets) {
+//            if (character.getCollision().isCollide(bullet.getCollision())) {
+//                bulletToRemove.add(bullet);
+//            }
+//        }
+//        bullets.removeAll(bulletToRemove);
         // bullet ends
 
         // background starts
@@ -117,7 +126,20 @@ public class GameScreen implements Screen {
         if (background2_x + background2.getWidth() < Gdx.graphics.getWidth()) background1_x = background2_x + background2.getWidth();
         // background ends
 
-        //character.update(); // updating character
+        // poison animation starts
+        poisonLaunchTime -= delta;
+        if (poisonLaunchTime <= 0) {
+            poisons.add(new Poison());
+            poisonLaunchTime = rand.nextFloat() * (POISON_MAX_TIME - POISON_MIN_TIME) + POISON_MIN_TIME;
+        }
+
+        ArrayList<Poison> poisonToRemove = new ArrayList<>();
+        for (Poison poison : poisons) {
+            poison.update();
+            if (poison.remove) poisonToRemove.add(poison);
+        }
+        poisons.removeAll(poisonToRemove);
+        // poison animation ends
 
         game.batch.begin();
 
@@ -132,10 +154,13 @@ public class GameScreen implements Screen {
         }
         // bullet ends
 
-        //character.render(game.batch); // rendering character
-
         // for animation
         game.batch.draw(reg,100,100,50/2,100/2,50,100,3,2,0);
+
+        // for poison animation
+        for (Poison poison : poisons) {
+            poison.render(game.batch);
+        }
 
         game.batch.end();
     }
