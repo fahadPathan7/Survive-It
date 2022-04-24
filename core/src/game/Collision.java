@@ -19,6 +19,7 @@ public class Collision {
     }
 
     public boolean isCollide (Collision col) {
-        return objectX < col.objectX + col.objectWidth && objectY < col.objectY + col.objectHeight && col.objectX < objectX + objectWidth && col.objectY < objectY + objectHeight;
+        return objectX < col.objectX + col.objectWidth && objectY < col.objectY + col.objectHeight &&
+                col.objectX < objectX + objectWidth && col.objectY < objectY + objectHeight;
     }
 }

@@ -7,22 +7,25 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
-public class Poison {
-    Texture poisonImg;
-    float poisonAnimationFrameDuration = 0.07f;
+public class Poison implements ForObject {
+    float poisonFrameDuration = 0.07f;
     Animation poisonAnimation;
-    TextureRegion reg;
+    TextureRegion poisonReg;
     float poisonStateTime = 0f;
     final float POISON_SPEED = 60;
-    float height = Gdx.graphics.getHeight() / 2, width = 600;
-    float x = Gdx.graphics.getWidth() + width / 2, y = 0;
-    boolean remove = false;
-    static int part = 1;
+    float poisonHeight = Gdx.graphics.getHeight() / 2, poisonWidth = 600;
+    float poisonX = Gdx.graphics.getWidth() + poisonWidth / 2, poisonY = 0;
+    boolean poisonRemove = false;
+    static int poisonPart = 1;
+    Collision collision;
 
     public Poison() {
-        part ^= 1;
-        if (part == 1) y = Gdx.graphics.getHeight() / 2;
+        collision = new Collision(poisonX, poisonY, poisonWidth, poisonHeight);
 
+        poisonPart ^= 1;
+        if (poisonPart == 1) poisonY = Gdx.graphics.getHeight() / 2;
+
+        // poison animation starts
         Array<TextureRegion> textureRegion = new Array<>();
         for (int i = 1; i <= 6; i++) {
             Texture texture = new Texture("poison" + i + ".jpg");
@@ -34,17 +37,29 @@ public class Poison {
             texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             textureRegion.add(new TextureRegion(texture));
         }
-        poisonAnimation = new Animation(poisonAnimationFrameDuration, textureRegion);
+        poisonAnimation = new Animation(poisonFrameDuration, textureRegion);
+        // poison animation ends
     }
+
+    @Override
     public void update() {
-        x -= POISON_SPEED * Gdx.graphics.getDeltaTime();
-        if (x + width <= 0) remove = true;
+        poisonX -= POISON_SPEED * Gdx.graphics.getDeltaTime();
+        if (poisonX + poisonWidth <= 0) poisonRemove = true;
+
+        collision.update(poisonX, poisonY, poisonWidth, poisonHeight);
     }
+
+    @Override
     public void render(SpriteBatch batch) {
         poisonStateTime += Gdx.graphics.getDeltaTime();
-        poisonStateTime %= (poisonAnimationFrameDuration * 12);
-        reg = (TextureRegion) poisonAnimation.getKeyFrame(poisonStateTime);
+        poisonStateTime %= (poisonFrameDuration * 12);
+        poisonReg = (TextureRegion) poisonAnimation.getKeyFrame(poisonStateTime);
 
-        batch.draw(reg,x,y,width / 2,height / 2,width,height,1,1,0);
+        batch.draw(poisonReg, poisonX, poisonY, poisonWidth / 2, poisonHeight / 2, poisonWidth,
+                poisonHeight,1,1,0);
+    }
+    @Override
+    public Collision getCollision() {
+        return collision;
     }
 }

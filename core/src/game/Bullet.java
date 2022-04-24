@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Bullet {
+public class Bullet implements ForObject{
     Collision collision;
 
     public final float BULLET_VERTICAL_SPEED = 60, BULLET_HORIZONTAL_SPEED = 91;
@@ -21,12 +21,13 @@ public class Bullet {
         collision = new Collision(bulletX, bulletY, bulletWidth, bulletHeight);
     }
 
-    public void update(float delta) {
+    @Override
+    public void update() {
         if (bulletY > BULLET_MAX_DISTANCE) bulletDirection *= -1;
         if (bulletY < BULLET_MIN_DISTANCE) bulletDirection *= -1;
 
-        bulletY += bulletDirection * BULLET_VERTICAL_SPEED * delta;
-        bulletX -= BULLET_HORIZONTAL_SPEED * delta;
+        bulletY += bulletDirection * BULLET_VERTICAL_SPEED * Gdx.graphics.getDeltaTime();
+        bulletX -= BULLET_HORIZONTAL_SPEED * Gdx.graphics.getDeltaTime();
 
         if (bulletX + bulletWidth <= 0) {
             remove = true;
@@ -35,10 +36,12 @@ public class Bullet {
         collision.update(bulletX, bulletY, bulletWidth, bulletHeight);
     }
 
+    @Override
     public void render(SpriteBatch batch) {
         batch.draw(bulletImg, bulletX, bulletY, bulletWidth, bulletHeight);
     }
 
+    @Override
     public Collision getCollision() {
         return collision;
     }

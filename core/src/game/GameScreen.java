@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.MyGdxGame;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -29,25 +28,20 @@ public class GameScreen implements Screen {
     int background1_x, background2_x;
     // background ends
 
-    // animation starts
-    float walkingStateTime = 0f;
-    Animation walkAnimation;
-    Texture walkSheet;
-    TextureRegion reg;
-    public int walkingAnimationRows = 2, walkingAnimationCols = 5;
-    public float walkingAnimationFrameDuration = 0.1f;
-    // animation ends
-
     // poison animation starts
     float poisonLaunchTime = 5f;
     ArrayList<Poison> poisons;
     public final float POISON_MIN_TIME = 40f, POISON_MAX_TIME = 60f;
     // poison animation ends
+
     public GameScreen(MyGdxGame game) {
         this.game = game;
         rand = new Random();
 
-        bullets = new ArrayList<Bullet>();
+        // creating character object
+        character = new Character();
+
+        bullets = new ArrayList<>();
 
         // background starts
         background1 = new Texture("background1.png");
@@ -55,24 +49,6 @@ public class GameScreen implements Screen {
         background1_x = 0;
         background2_x = 5000; // initial huge value to avoid colliding
         // background ends
-
-        // animation starts
-        walkSheet = new Texture("run1.png");
-
-        TextureRegion[][] walkingTmp = TextureRegion.split(walkSheet,
-                walkSheet.getWidth() / walkingAnimationCols,
-                walkSheet.getHeight() / walkingAnimationRows);
-
-        TextureRegion[] walkFrames = new TextureRegion[walkingAnimationRows * walkingAnimationCols];
-        int index = 0;
-        for (int i = 0; i < walkingAnimationRows; i++) {
-            for (int j = 0; j < walkingAnimationCols; j++) {
-                walkFrames[index++] = walkingTmp[i][j];
-            }
-        }
-        walkAnimation = new Animation<TextureRegion>(walkingAnimationFrameDuration, walkFrames);
-        walkingStateTime = 0f;
-        // animation ends
 
         // poison animation starts
         poisons = new ArrayList<>();
@@ -87,11 +63,8 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(1, 1, 1, 1);
 
-        // animation starts
-        walkingStateTime += delta;
-        walkingStateTime %= (walkingAnimationFrameDuration * (walkingAnimationRows * walkingAnimationCols));
-        reg = (TextureRegion) walkAnimation.getKeyFrame(walkingStateTime);
-        // animation ends
+        // updating character
+        character.update();
 
         // bullet starts
         if (bulletLaunchTime <= 0) {
@@ -102,28 +75,34 @@ public class GameScreen implements Screen {
 
         ArrayList<Bullet> bulletToRemove = new ArrayList<>();
         for (Bullet bullet : bullets) {
-            bullet.update(delta);
+            bullet.update();
             if (bullet.remove) {
+                bulletToRemove.add(bullet);
+            }
+            // checking if bullet is colliding with character
+            if (character.getCollision().isCollide(bullet.getCollision())) {
                 bulletToRemove.add(bullet);
             }
         }
         bullets.removeAll(bulletToRemove);
 
         // checking if bullet is colliding with character
-//        bulletToRemove.clear();
-//        for (Bullet bullet : bullets) {
-//            if (character.getCollision().isCollide(bullet.getCollision())) {
-//                bulletToRemove.add(bullet);
-//            }
-//        }
-//        bullets.removeAll(bulletToRemove);
+        bulletToRemove.clear();
+        for (Bullet bullet : bullets) {
+            if (character.getCollision().isCollide(bullet.getCollision())) {
+                bulletToRemove.add(bullet);
+            }
+        }
+        bullets.removeAll(bulletToRemove);
         // bullet ends
 
         // background starts
         background1_x -= BACKGROUND_HORIZONTAL_SPEED * delta;
         background2_x -= BACKGROUND_HORIZONTAL_SPEED * delta;
-        if (background1_x + background1.getWidth() < Gdx.graphics.getWidth()) background2_x = background1_x + background1.getWidth();
-        if (background2_x + background2.getWidth() < Gdx.graphics.getWidth()) background1_x = background2_x + background2.getWidth();
+        if (background1_x + background1.getWidth() < Gdx.graphics.getWidth())
+            background2_x = background1_x + background1.getWidth();
+        if (background2_x + background2.getWidth() < Gdx.graphics.getWidth())
+            background1_x = background2_x + background2.getWidth();
         // background ends
 
         // poison animation starts
@@ -136,7 +115,7 @@ public class GameScreen implements Screen {
         ArrayList<Poison> poisonToRemove = new ArrayList<>();
         for (Poison poison : poisons) {
             poison.update();
-            if (poison.remove) poisonToRemove.add(poison);
+            if (poison.poisonRemove) poisonToRemove.add(poison);
         }
         poisons.removeAll(poisonToRemove);
         // poison animation ends
@@ -148,14 +127,14 @@ public class GameScreen implements Screen {
         game.batch.draw(background2, background2_x, 0, background2.getWidth(), Gdx.graphics.getHeight());
         // background ends
 
+        // rendering character
+        character.render(game.batch);
+
         // bullet starts
         for (Bullet bullet : bullets) {
             bullet.render(game.batch);
         }
         // bullet ends
-
-        // for animation
-        game.batch.draw(reg,100,100,50/2,100/2,50,100,3,2,0);
 
         // for poison animation
         for (Poison poison : poisons) {
