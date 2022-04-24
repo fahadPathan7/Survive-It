@@ -28,12 +28,12 @@ public class Poison implements ForObject {
         // poison animation starts
         Array<TextureRegion> textureRegion = new Array<>();
         for (int i = 1; i <= 6; i++) {
-            Texture texture = new Texture("poison" + i + ".jpg");
+            Texture texture = new Texture("Poison\\poison" + i + ".jpg");
             texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             textureRegion.add(new TextureRegion(texture));
         }
         for (int i = 6; i >= 1; i--) {
-            Texture texture = new Texture("poison" + i + ".jpg");
+            Texture texture = new Texture("Poison\\poison" + i + ".jpg");
             texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             textureRegion.add(new TextureRegion(texture));
         }

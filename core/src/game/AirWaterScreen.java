@@ -3,15 +3,13 @@ package game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.MyGdxGame;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class GameScreen implements Screen {
+public class AirWaterScreen implements Screen {
     MyGdxGame game; // reference of MyGdxGame
     Character character; // reference of Character
     Random rand; // for taking random value
@@ -34,7 +32,7 @@ public class GameScreen implements Screen {
     public final float POISON_MIN_TIME = 40f, POISON_MAX_TIME = 60f;
     // poison animation ends
 
-    public GameScreen(MyGdxGame game) {
+    public AirWaterScreen(MyGdxGame game) {
         this.game = game;
         rand = new Random();
 
@@ -51,7 +49,7 @@ public class GameScreen implements Screen {
         // background ends
 
         // poison animation starts
-        poisons = new ArrayList<>();
+        //poisons = new ArrayList<>();
         // poison animation ends
     }
     @Override
@@ -106,18 +104,18 @@ public class GameScreen implements Screen {
         // background ends
 
         // poison animation starts
-        poisonLaunchTime -= delta;
-        if (poisonLaunchTime <= 0) {
-            poisons.add(new Poison());
-            poisonLaunchTime = rand.nextFloat() * (POISON_MAX_TIME - POISON_MIN_TIME) + POISON_MIN_TIME;
-        }
-
-        ArrayList<Poison> poisonToRemove = new ArrayList<>();
-        for (Poison poison : poisons) {
-            poison.update();
-            if (poison.poisonRemove) poisonToRemove.add(poison);
-        }
-        poisons.removeAll(poisonToRemove);
+//        poisonLaunchTime -= delta;
+//        if (poisonLaunchTime <= 0) {
+//            poisons.add(new Poison());
+//            poisonLaunchTime = rand.nextFloat() * (POISON_MAX_TIME - POISON_MIN_TIME) + POISON_MIN_TIME;
+//        }
+//
+//        ArrayList<Poison> poisonToRemove = new ArrayList<>();
+//        for (Poison poison : poisons) {
+//            poison.update();
+//            if (poison.poisonRemove) poisonToRemove.add(poison);
+//        }
+//        poisons.removeAll(poisonToRemove);
         // poison animation ends
 
         game.batch.begin();
@@ -137,9 +135,9 @@ public class GameScreen implements Screen {
         // bullet ends
 
         // for poison animation
-        for (Poison poison : poisons) {
-            poison.render(game.batch);
-        }
+//        for (Poison poison : poisons) {
+//            poison.render(game.batch);
+//        }
 
         game.batch.end();
     }

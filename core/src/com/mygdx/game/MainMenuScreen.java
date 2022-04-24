@@ -1,23 +1,47 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
-import game.GameScreen;
+import game.AirScreen;
+import game.AirWaterScreen;
+import game.WaterScreen;
 
 public class MainMenuScreen implements Screen {
-    private final float IMAGE_WIDTH = 100;
-    private final float IMAGE_HEIGHT = 100;
-    private final float SPEED = 250;
-    float imageX = (float)Gdx.graphics.getWidth() / 2 - IMAGE_WIDTH / 2, imageY = (float)Gdx.graphics.getHeight() / 2 - IMAGE_HEIGHT / 2;
-
-    Texture img;
     MyGdxGame game;
+
+    private final float IMAGE_GAP = 200;
+
+    // for air and water starts
+    private final float AIR_WATER_IMAGE_WIDTH = 100;
+    private final float AIR_WATER_IMAGE_HEIGHT = 100;
+    float airWaterImageX = (float)Gdx.graphics.getWidth() / 2 - AIR_WATER_IMAGE_WIDTH / 2,
+            airWaterImageY = (float)Gdx.graphics.getHeight() / 2 - AIR_WATER_IMAGE_HEIGHT / 2;
+    Texture airWaterImg;
+    // for air and water ends
+
+    // for air starts
+    private final float AIR_IMAGE_WIDTH = 100;
+    private final float AIR_IMAGE_HEIGHT = 100;
+    float airImageX = (float)Gdx.graphics.getWidth() / 2 - AIR_IMAGE_WIDTH / 2 - IMAGE_GAP,
+            airImageY = (float)Gdx.graphics.getHeight() / 2 - AIR_IMAGE_HEIGHT / 2;
+    Texture airImg;
+    // for air ends
+
+    // for water starts
+    private final float WATER_IMAGE_WIDTH = 100;
+    private final float WATER_IMAGE_HEIGHT = 100;
+    float waterImageX = (float)Gdx.graphics.getWidth() / 2 - WATER_IMAGE_WIDTH / 2 + IMAGE_GAP,
+            waterImageY = (float)Gdx.graphics.getHeight() / 2 - WATER_IMAGE_HEIGHT / 2;
+    Texture waterImg;
+    // for water ends
+
     public MainMenuScreen(MyGdxGame game) {
         this.game = game;
-        img = new Texture("exit_button_on.png");
+        airWaterImg = new Texture("RandomButtons\\air_water_screen.png");
+        airImg = new Texture("RandomButtons\\air_screen.png");
+        waterImg = new Texture("RandomButtons\\water_screen.png");
     }
     @Override
     public void show() {
@@ -27,29 +51,37 @@ public class MainMenuScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(0, 1, 0, 1);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            imageY += SPEED * Gdx.graphics.getDeltaTime();
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            imageY -= SPEED * Gdx.graphics.getDeltaTime();
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            imageX -= SPEED * Gdx.graphics.getDeltaTime();
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            imageX += SPEED * Gdx.graphics.getDeltaTime();
-        }
-
-        if (Gdx.input.getX() >= imageX && Gdx.input.getX() <= imageX + IMAGE_WIDTH && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= imageY
-                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= imageY + IMAGE_HEIGHT) {
+        if (Gdx.input.getX() >= airWaterImageX && Gdx.input.getX() <= airWaterImageX + AIR_WATER_IMAGE_WIDTH &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= airWaterImageY
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= airWaterImageY + AIR_WATER_IMAGE_HEIGHT) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new AirWaterScreen(game));
+            }
+        }
+
+        if (Gdx.input.getX() >= airImageX && Gdx.input.getX() <= airImageX + AIR_IMAGE_WIDTH &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= airImageY
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= airImageY + AIR_IMAGE_HEIGHT) {
+            if (Gdx.input.isTouched()) {
+                this.dispose();
+                game.setScreen(new AirScreen(game));
+            }
+        }
+
+        if (Gdx.input.getX() >= waterImageX && Gdx.input.getX() <= waterImageX + WATER_IMAGE_WIDTH &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= waterImageY
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= waterImageY + WATER_IMAGE_HEIGHT) {
+            if (Gdx.input.isTouched()) {
+                this.dispose();
+                game.setScreen(new WaterScreen(game));
             }
         }
 
         game.batch.begin();
-        game.batch.draw(img, imageX, imageY, IMAGE_WIDTH, IMAGE_HEIGHT);
+        game.batch.draw(airImg, airImageX, airImageY, AIR_IMAGE_WIDTH, AIR_IMAGE_HEIGHT);
+        game.batch.draw(airWaterImg, airWaterImageX, airWaterImageY, AIR_WATER_IMAGE_WIDTH, AIR_WATER_IMAGE_HEIGHT);
+        game.batch.draw(waterImg, waterImageX, waterImageY, WATER_IMAGE_WIDTH, WATER_IMAGE_HEIGHT);
         game.batch.end();
     }
 
@@ -76,6 +108,6 @@ public class MainMenuScreen implements Screen {
     @Override
     public void dispose() {
         //game.batch.dispose();
-        img.dispose();
+        //airWaterImg.dispose();
     }
 }
