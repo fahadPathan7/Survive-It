@@ -44,8 +44,8 @@ public class GameScreen implements Screen {
         bullets = new ArrayList<>();
 
         // background starts
-        background1 = new Texture("background1.png");
-        background2 = new Texture("background2.png");
+        background1 = new Texture("Background\\12.jpeg");
+        background2 = new Texture("Background\\12.jpeg");
         background1_x = 0;
         background2_x = 5000; // initial huge value to avoid colliding
         // background ends

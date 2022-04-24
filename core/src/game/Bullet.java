@@ -8,7 +8,10 @@ public class Bullet implements ForObject{
     Collision collision;
 
     public final float BULLET_VERTICAL_SPEED = 60, BULLET_HORIZONTAL_SPEED = 91;
-    public float bulletWidth = 50, bulletHeight = 50;
+    public float bulletWidth = 240, bulletHeight = 200;             // Change
+    //public float bulletWidth = 240, bulletHeight = 200;  default
+    //public float bulletWidth = 279, bulletHeight = 150;  tortoise
+    //public float bulletWidth = 160, bulletHeight = 150;  bluebird
     public final float BULLET_MAX_DISTANCE = (float)Gdx.graphics.getHeight() / 2 - bulletHeight, BULLET_MIN_DISTANCE = 0;
     public float bulletDirection = 1;
     float bulletX = Gdx.graphics.getWidth(), bulletY = 10f;
@@ -16,7 +19,7 @@ public class Bullet implements ForObject{
     public boolean remove = false;
 
     public Bullet() {
-        bulletImg = new Texture("badlogic.jpg");
+        bulletImg = new Texture("Monster\\mons2.png");    // change
 
         collision = new Collision(bulletX, bulletY, bulletWidth, bulletHeight);
     }

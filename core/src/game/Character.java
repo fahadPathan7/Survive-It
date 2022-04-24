@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Character implements ForObject {
     float characterX = 0, characterY = 0;
-    public float characterWidth = 180, characterHeight = 250;
+    public float characterWidth = 170, characterHeight = 250; // change
     private final float CHARACTER_SPEED = 200;
     Collision collision;
 
@@ -85,7 +85,7 @@ public class Character implements ForObject {
 
     public void createRunAnimation() {
         // run animation starts
-        Texture runSheet = new Texture("run1.png");
+        Texture runSheet = new Texture("Run\\run1.png");
 
         TextureRegion[][] runningTmp = TextureRegion.split(runSheet,
                 runSheet.getWidth() / runCols,
@@ -115,19 +115,22 @@ public class Character implements ForObject {
     }
 
     public void createFlyAnimation() {
-        Texture flySheet = new Texture("fly.png");
+        Texture flySheet = new Texture("Fly\\fly.png");
 
         TextureRegion[][] flyingTmp = TextureRegion.split(flySheet,
                 flySheet.getWidth() / flyCols,
                 flySheet.getHeight() / flyRows);
 
-        TextureRegion[] flyFrames = new TextureRegion[flyRows * flyCols];
-        int index = 0;
-        for (int i = 0; i < flyRows; i++) {
-            for (int j = 0; j < flyCols; j++) {
-                flyFrames[index++] = flyingTmp[i][j];
-            }
-        }
+        TextureRegion[] flyFrames = new TextureRegion[1];
+//        int index = 0;
+//        for (int i = 0; i < flyRows; i++) {
+//            for (int j = 0; j < flyCols; j++) {
+//                flyFrames[index++] = flyingTmp[i][j];
+//            }
+//        }
+
+        flyFrames[0] = flyingTmp[0][0];
+
         flyAnimation = new Animation<TextureRegion>(flyFrameDuration, flyFrames);
         flyStateTime = 0f;
     }
