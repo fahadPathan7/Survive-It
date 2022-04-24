@@ -4,34 +4,49 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.Random;
+
 public class Bullet implements ForObject{
     Collision collision;
+    Random rand;
 
-    public final float BULLET_VERTICAL_SPEED = 60, BULLET_HORIZONTAL_SPEED = 91;
-    public float bulletWidth = 240, bulletHeight = 200;             // Change
+    public float bulletVerticalSpeed = 60, bulletHorizontalSpeed = 200;
+    public float bulletDistanceCorrection = bulletVerticalSpeed * Gdx.graphics.getDeltaTime();
+    public float bulletWidth = 240, bulletHeight = 200; // Change
     //public float bulletWidth = 240, bulletHeight = 200;  default
     //public float bulletWidth = 279, bulletHeight = 150;  tortoise
     //public float bulletWidth = 160, bulletHeight = 150;  bluebird
-    public final float BULLET_MAX_DISTANCE = (float)Gdx.graphics.getHeight() / 2 - bulletHeight, BULLET_MIN_DISTANCE = 0;
+    public float bulletMaxDistance = (float)Gdx.graphics.getHeight() / 2 - bulletHeight, bulletMinDistance = 0;
     public float bulletDirection = 1;
-    float bulletX = Gdx.graphics.getWidth(), bulletY = 10f;
+    float bulletX = Gdx.graphics.getWidth(), bulletY;
     public Texture bulletImg;
     public boolean remove = false;
 
     public Bullet() {
+        rand = new Random();
         bulletImg = new Texture("Monster\\mons2.png");    // change
 
         collision = new Collision(bulletX, bulletY, bulletWidth, bulletHeight);
+
+        bulletY = rand.nextFloat() * (Gdx.graphics.getHeight() - bulletWidth);
     }
 
     @Override
     public void update() {
-        if (bulletY > BULLET_MAX_DISTANCE) bulletDirection *= -1;
-        if (bulletY < BULLET_MIN_DISTANCE) bulletDirection *= -1;
+        if (bulletY >= bulletMaxDistance && bulletY <= bulletMaxDistance + bulletDistanceCorrection) {
+            bulletDirection *= -1;
+            bulletY = bulletMaxDistance;
+        }
+        if (bulletY <= bulletMinDistance) {
+            bulletDirection *= -1;
+            bulletY = bulletMinDistance;
+        }
 
-        bulletY += bulletDirection * BULLET_VERTICAL_SPEED * Gdx.graphics.getDeltaTime();
-        bulletX -= BULLET_HORIZONTAL_SPEED * Gdx.graphics.getDeltaTime();
-
+        if (bulletY >= bulletMinDistance && bulletY <= bulletMaxDistance) {
+            bulletY += bulletDirection * bulletVerticalSpeed * Gdx.graphics.getDeltaTime();
+        }
+        bulletX -= bulletHorizontalSpeed * Gdx.graphics.getDeltaTime();
+        //System.out.println(bulletY); //! test
         if (bulletX + bulletWidth <= 0) {
             remove = true;
         }
