@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Character implements ForObject {
     float characterX = 50, characterY = 0;
     public float characterWidth = 100, characterHeight = 147; // change
-    private final float CHARACTER_SPEED = 200;
+    private final float CHARACTER_SPEED = 250;
     Collision collision;
 
     // run animation starts
@@ -42,6 +42,15 @@ public class Character implements ForObject {
     public boolean jumpDelay = false;
     // jump animation ends
 
+    // water, air divider starts
+    public boolean inWater = true;
+    public boolean inAir = false;
+    public float waterMinHeight = 0f;
+    public float waterMaxHeight = Gdx.graphics.getHeight() / 2f - characterHeight;
+    public float airMinHeight = Gdx.graphics.getHeight() / 2f + CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
+    public float airMaxHeight = Gdx.graphics.getHeight() - characterHeight;
+    // water, air divider ends
+
 
     public Character() {
         collision = new Collision(characterX, characterY, characterWidth, characterHeight);
@@ -60,24 +69,38 @@ public class Character implements ForObject {
 
     @Override
     public void update() {
-        // changing character position
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            characterY += CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
-        }
-        else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            characterY -= CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
-        }
+        // setting character position (in air or water)
+        setCharacterPosition();
 
-        // making boundary of character
-        if (characterX <= 0) characterX = 0;
-        if (characterX + characterWidth >= Gdx.graphics.getWidth())
-            characterX = Gdx.graphics.getWidth() - characterWidth;
-        if (characterY <= 0) characterY = 0;
-        if (characterY + characterHeight >= Gdx.graphics.getHeight())
-            characterY = Gdx.graphics.getHeight() - characterHeight;
+        // setting character bound (not exceeding water or air)
+        setCharacterBound();
 
         // updating collision
         collision.update(characterX, characterY, characterWidth, characterHeight);
+    }
+
+    public void setCharacterPosition() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W) && jumpDelay == false) {
+            characterY = waterMinHeight;
+            inWater = true;
+            inAir = false;
+        }
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            characterY = airMinHeight;
+            inAir = true;
+            inWater = false;
+        }
+    }
+
+    public void setCharacterBound() {
+        if (inWater) {
+            if (characterY <= waterMinHeight) characterY = waterMinHeight;
+            else if (characterY >= waterMaxHeight) characterY = waterMaxHeight;
+        }
+        else if (inAir) {
+            if (characterY <= airMinHeight) characterY = airMinHeight;
+            else if (characterY >= airMaxHeight) characterY = airMaxHeight;
+        }
     }
 
     @Override
@@ -99,7 +122,7 @@ public class Character implements ForObject {
         else if (characterY == 0 && jumpDelay == false) {
             renderRunAnimation(batch);
         }
-        else if (characterY > 0 && jumpDelay == false) {
+        else if (characterY >= airMinHeight && jumpDelay == false) {
             renderFlyAnimation(batch);
         }
     }
@@ -162,6 +185,12 @@ public class Character implements ForObject {
     }
 
     public void renderFlyAnimation(SpriteBatch batch) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            characterY += CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            characterY -= CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
+        }
         // fly animation starts
         flyStateTime += Gdx.graphics.getDeltaTime();
         flyStateTime %= (flyFrameDuration * (flyRows * flyCols));
