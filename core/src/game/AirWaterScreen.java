@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.SoundManager;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -54,6 +55,10 @@ public class AirWaterScreen implements Screen {
     }
     @Override
     public void show() {
+        SoundManager.create();
+        SoundManager.game.setLooping(true);
+        SoundManager.game.setVolume(0.3f);     // 50% of main volume
+        SoundManager.game.play();
 
     }
 
