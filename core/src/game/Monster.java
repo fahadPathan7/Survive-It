@@ -19,7 +19,7 @@ public class Monster implements ForObject{
     public float monsterMaxDistance = (float)Gdx.graphics.getHeight() / 2 - monsterHeight, monsterMinDistance = 0;
     public float monsterDirection = 1;
     float monsterX = Gdx.graphics.getWidth(), monsterY;
-    public String[] monsterImg = {"Monster\\mons1.png","Monster\\mons2.png", "Monster\\mons3.png", "Monster\\mons4.png",
+    public String[] monsterImg = {"Monster\\mons1.png", "Monster\\mons2.png", "Monster\\mons3.png", "Monster\\mons4.png",
             "Monster\\mons5.png", "Monster\\mons6.png"};
     Texture texture;
     public boolean remove = false;
