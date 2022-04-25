@@ -6,10 +6,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
 public class Character implements ForObject {
     float characterX = 50, characterY = 0;
-    public float characterWidth = 100, characterHeight = 147; // change
+    public float characterWidth = 108, characterHeight = 140; // change
     private final float CHARACTER_SPEED = 250;
     Collision collision;
 
@@ -17,8 +18,9 @@ public class Character implements ForObject {
     float runStateTime = 0f;
     Animation runAnimation;
     TextureRegion runReg;
-    public int runRows = 2, runCols = 5;
-    public float runFrameDuration = 0.1f;
+//    public int runRows = 2, runCols = 5;
+    public int runImgCnt = 9;
+    public float runFrameDuration = 0.075f;
     // run animation ends
 
     // fly animation starts
@@ -80,15 +82,17 @@ public class Character implements ForObject {
     }
 
     public void setCharacterPosition() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W) && jumpDelay == false) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W) && !jumpDelay) {
             characterY = waterMinHeight;
             inWater = true;
             inAir = false;
+            characterWidth = 108;
         }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.S) && jumpDelay == false) {
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.S) && !jumpDelay && !inAir) {
             characterY = airMinHeight;
             inAir = true;
             inWater = false;
+            characterWidth = 69;
         }
     }
 
@@ -105,11 +109,11 @@ public class Character implements ForObject {
 
     @Override
     public void render(SpriteBatch batch) {
-        if (jumpDelay == true) {
+        if (jumpDelay) {
             renderJumpAnimation(batch);
         }
 
-        if (characterY == 0 && Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && jumpDelay == false) {
+        if (characterY == 0 && Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !jumpDelay) {
             jumpDirection = 0;
             jumpStateTime = 0f;
             jumpDelay = true;
@@ -119,10 +123,10 @@ public class Character implements ForObject {
 //            System.out.println(jumpMaxHeight);
 //            System.out.println(jumpSpeed * Gdx.graphics.getDeltaTime());
         }
-        else if (characterY == 0 && jumpDelay == false) {
+        else if (characterY == 0 && !jumpDelay) {
             renderRunAnimation(batch);
         }
-        else if (characterY >= airMinHeight && jumpDelay == false) {
+        else if (characterY >= airMinHeight && !jumpDelay) {
             renderFlyAnimation(batch);
         }
     }
@@ -134,20 +138,14 @@ public class Character implements ForObject {
 
     public void createRunAnimation() {
         // run animation starts
-        Texture runSheet = new Texture("Run\\run1.png");
-
-        TextureRegion[][] runningTmp = TextureRegion.split(runSheet,
-                runSheet.getWidth() / runCols,
-                runSheet.getHeight() / runRows);
-
-        TextureRegion[] runFrames = new TextureRegion[runRows * runCols];
-        int index = 0;
-        for (int i = 0; i < runRows; i++) {
-            for (int j = 0; j < runCols; j++) {
-                runFrames[index++] = runningTmp[i][j];
-            }
+        Array<TextureRegion> textureRegion = new Array<>();
+        for (int i = 1; i <= runImgCnt + 1; i++) {
+            if (i == 6) continue;
+            Texture texture = new Texture("Run\\r" + i + ".png");
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            textureRegion.add(new TextureRegion(texture));
         }
-        runAnimation = new Animation<TextureRegion>(runFrameDuration, runFrames);
+        runAnimation = new Animation<>(runFrameDuration, textureRegion);
         runStateTime = 0f;
         // run animation ends
     }
@@ -155,7 +153,7 @@ public class Character implements ForObject {
     public void renderRunAnimation(SpriteBatch batch) {
         // run animation starts
         runStateTime += Gdx.graphics.getDeltaTime();
-        runStateTime %= (runFrameDuration * (runRows * runCols));
+        runStateTime %= (runFrameDuration * runImgCnt);
         runReg = (TextureRegion) runAnimation.getKeyFrame(runStateTime);
 
         batch.draw(runReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
@@ -199,7 +197,7 @@ public class Character implements ForObject {
 //        batch.draw(flyReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
 //                characterWidth,characterHeight,1,1,0);
 //        // fly animation ends
-        Texture flyPic = new Texture("Fly\\f1.png");
+        Texture flyPic = new Texture("Fly\\f11.png");
         batch.draw(flyPic, characterX, characterY, characterWidth, characterHeight);
     }
 

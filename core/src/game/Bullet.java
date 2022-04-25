@@ -12,7 +12,7 @@ public class Bullet implements ForObject{
 
     public float bulletVerticalSpeed = 60, bulletHorizontalSpeed = 200;
     public float bulletDistanceCorrection = bulletVerticalSpeed * Gdx.graphics.getDeltaTime();
-    public float bulletWidth = 240, bulletHeight = 200; // Change
+    public float bulletWidth = 150, bulletHeight = 70.8f; // Change
     //public float bulletWidth = 240, bulletHeight = 200;  default
     //public float bulletWidth = 279, bulletHeight = 150;  tortoise
     //public float bulletWidth = 160, bulletHeight = 150;  bluebird
