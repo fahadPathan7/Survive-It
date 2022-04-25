@@ -18,7 +18,6 @@ public class Character implements ForObject {
     float runStateTime = 0f;
     Animation runAnimation;
     TextureRegion runReg;
-//    public int runRows = 2, runCols = 5;
     public int runImgCnt = 9;
     public float runFrameDuration = 0.075f;
     // run animation ends
@@ -27,16 +26,17 @@ public class Character implements ForObject {
     float flyStateTime = 0f;
     Animation flyAnimation;
     TextureRegion flyReg;
-    public int flyRows = 1, flyCols = 5;
-    public float flyFrameDuration = 0.1f;
+    public int flyImgCnt = 5;
+    public float flyFrameDuration = 0.2f;
     // fly animation ends
 
     // jump animation starts
     TextureRegion jumpReg;
-    public float jumpTime = 2f;
+    public float jumpTime = 2.5f;
     public float jumpStateTime;
     Animation jumpAnimation;
     public int jumpRows = 2, jumpCols = 5;
+    public int jumpImgCnt = 10;
     public float jumpFrameDuration = jumpTime / (jumpRows * jumpCols);
     public float jumpMaxHeight = (float)Gdx.graphics.getHeight() / 2f - characterHeight;
     public float jumpSpeed = jumpMaxHeight / (jumpTime / 2);
@@ -92,7 +92,7 @@ public class Character implements ForObject {
             characterY = airMinHeight;
             inAir = true;
             inWater = false;
-            characterWidth = 69;
+            characterWidth = 70;
         }
     }
 
@@ -162,23 +162,17 @@ public class Character implements ForObject {
     }
 
     public void createFlyAnimation() {
-        Texture flySheet = new Texture("Fly\\fly.png");
+        Array<TextureRegion> textureRegion = new Array<>();
+        for (int i = 1; i <= flyImgCnt; i++) {
+            if (i == 6) continue;
+            Texture texture = new Texture("Fly\\fly" + i + ".png");
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            textureRegion.add(new TextureRegion(texture));
+        }
+        flyAnimation = new Animation<>(flyFrameDuration, textureRegion);
+        flyStateTime = 0f;
 
-        TextureRegion[][] flyingTmp = TextureRegion.split(flySheet,
-                flySheet.getWidth() / flyCols,
-                flySheet.getHeight() / flyRows);
-
-        TextureRegion[] flyFrames = new TextureRegion[1];
-//        int index = 0;
-//        for (int i = 0; i < flyRows; i++) {
-//            for (int j = 0; j < flyCols; j++) {
-//                flyFrames[index++] = flyingTmp[i][j];
-//            }
-//        }
-
-        flyFrames[0] = flyingTmp[0][0];
-
-        flyAnimation = new Animation<TextureRegion>(flyFrameDuration, flyFrames);
+        flyAnimation = new Animation<TextureRegion>(flyFrameDuration, textureRegion);
         flyStateTime = 0f;
     }
 
@@ -189,33 +183,42 @@ public class Character implements ForObject {
         else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             characterY -= CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
         }
-//        // fly animation starts
-//        flyStateTime += Gdx.graphics.getDeltaTime();
-//        flyStateTime %= (flyFrameDuration * (flyRows * flyCols));
-//        flyReg = (TextureRegion) flyAnimation.getKeyFrame(flyStateTime);
-//
-//        batch.draw(flyReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
-//                characterWidth,characterHeight,1,1,0);
-//        // fly animation ends
-        Texture flyPic = new Texture("Fly\\f11.png");
-        batch.draw(flyPic, characterX, characterY, characterWidth, characterHeight);
+        // fly animation starts
+        flyStateTime += Gdx.graphics.getDeltaTime();
+        flyStateTime %= (flyFrameDuration * (flyImgCnt));
+        flyReg = (TextureRegion) flyAnimation.getKeyFrame(flyStateTime);
+
+        batch.draw(flyReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
+                characterWidth,characterHeight,1,1,0);
+        // fly animation ends
+//        Texture flyPic = new Texture("Fly\\f11.png");
+//        batch.draw(flyPic, characterX, characterY, characterWidth, characterHeight);
     }
 
     public void createJumpAnimation() {
-        Texture jumpSheet = new Texture("Jump\\jump.png");
+//        Texture jumpSheet = new Texture("Jump\\jump.png");
+//
+//        TextureRegion[][] jumpingTmp = TextureRegion.split(jumpSheet,
+//                jumpSheet.getWidth() / jumpCols,
+//                jumpSheet.getHeight() / jumpRows);
+//
+//        TextureRegion[] jumpFrames = new TextureRegion[jumpRows * jumpCols];
+//        int index = 0;
+//        for (int i = 0; i < jumpRows; i++) {
+//            for (int j = 0; j < jumpCols; j++) {
+//                jumpFrames[index++] = jumpingTmp[i][j];
+//            }
+//        }
+//        jumpAnimation = new Animation<TextureRegion>(jumpFrameDuration, jumpFrames);
 
-        TextureRegion[][] jumpingTmp = TextureRegion.split(jumpSheet,
-                jumpSheet.getWidth() / jumpCols,
-                jumpSheet.getHeight() / jumpRows);
-
-        TextureRegion[] jumpFrames = new TextureRegion[jumpRows * jumpCols];
-        int index = 0;
-        for (int i = 0; i < jumpRows; i++) {
-            for (int j = 0; j < jumpCols; j++) {
-                jumpFrames[index++] = jumpingTmp[i][j];
-            }
+        Array<TextureRegion> textureRegion = new Array<>();
+        for (int i = 1; i <= jumpImgCnt; i++) {
+            Texture texture = new Texture("Jump\\jump" + i + ".png");
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            textureRegion.add(new TextureRegion(texture));
         }
-        jumpAnimation = new Animation<TextureRegion>(jumpFrameDuration, jumpFrames);
+        jumpAnimation = new Animation<>(jumpFrameDuration, textureRegion);
+        jumpStateTime = 0f;
     }
 
     public void renderJumpAnimation(SpriteBatch batch) {
@@ -237,6 +240,7 @@ public class Character implements ForObject {
         }
 
         jumpReg = (TextureRegion) jumpAnimation.getKeyFrame(jumpStateTime);
+        //characterWidth = (jumpReg.getRegionWidth() / jumpReg.getRegionHeight()) * characterHeight;
         batch.draw(jumpReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
                 characterWidth,characterHeight,1,1,0);
     }
