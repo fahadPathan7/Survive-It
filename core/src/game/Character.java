@@ -191,14 +191,16 @@ public class Character implements ForObject {
         else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             characterY -= CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
         }
-        // fly animation starts
-        flyStateTime += Gdx.graphics.getDeltaTime();
-        flyStateTime %= (flyFrameDuration * (flyRows * flyCols));
-        flyReg = (TextureRegion) flyAnimation.getKeyFrame(flyStateTime);
-
-        batch.draw(flyReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
-                characterWidth,characterHeight,1,1,0);
-        // fly animation ends
+//        // fly animation starts
+//        flyStateTime += Gdx.graphics.getDeltaTime();
+//        flyStateTime %= (flyFrameDuration * (flyRows * flyCols));
+//        flyReg = (TextureRegion) flyAnimation.getKeyFrame(flyStateTime);
+//
+//        batch.draw(flyReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
+//                characterWidth,characterHeight,1,1,0);
+//        // fly animation ends
+        Texture flyPic = new Texture("Fly\\f1.png");
+        batch.draw(flyPic, characterX, characterY, characterWidth, characterHeight);
     }
 
     public void createJumpAnimation() {
