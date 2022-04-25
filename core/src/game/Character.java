@@ -85,7 +85,7 @@ public class Character implements ForObject {
             inWater = true;
             inAir = false;
         }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.S) && jumpDelay == false) {
             characterY = airMinHeight;
             inAir = true;
             inWater = false;
