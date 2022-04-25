@@ -68,7 +68,7 @@ public class AboutScreen implements Screen {
     @Override
     public void dispose() {
 
-        SoundManager.home.dispose();
+        SoundManager.about.dispose();
 
     }
 }
