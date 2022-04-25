@@ -52,7 +52,7 @@ public class GameMenuScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 890) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
-                game.setScreen(new MainMenuScreen(game));
+                game.setScreen(new AirWaterScreen(game));
             }
         }
 

@@ -64,7 +64,7 @@ public class Character implements ForObject {
         createFlyAnimation();
 
         // creating jump animation
-        System.out.println(jumpMaxHeight + characterHeight); //! test
+        //System.out.println(jumpMaxHeight + characterHeight); //! test
         jumpMaxHeight -= jumpSpeed * Gdx.graphics.getDeltaTime(); // correcting to avoid unnecessary collusion
         createJumpAnimation();
     }
