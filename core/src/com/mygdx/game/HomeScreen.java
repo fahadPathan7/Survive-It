@@ -84,7 +84,8 @@ public class HomeScreen implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.ENTER))
         {
             this.dispose();
-            game.setScreen(new MainMenuScreen(game));
+            //game.setScreen(new MainMenuScreen(game));
+            game.setScreen(new GameMenuScreen(game));
         }
 
         end_time += delta;

@@ -43,8 +43,8 @@ public class AirWaterScreen implements Screen {
         bullets = new ArrayList<>();
 
         // background starts
-        background1 = new Texture("Background\\12.jpeg");
-        background2 = new Texture("Background\\12.jpeg");
+        background1 = new Texture("Background\\water_air.jpeg");
+        background2 = new Texture("Background\\water_air.jpeg");
         background1_x = 0;
         background2_x = 5000; // initial huge value to avoid colliding
         // background ends
@@ -56,9 +56,9 @@ public class AirWaterScreen implements Screen {
     @Override
     public void show() {
         SoundManager.create();
-        SoundManager.game.setLooping(true);
-        SoundManager.game.setVolume(0.3f);     // 50% of main volume
-        SoundManager.game.play();
+        SoundManager.gameLevel3.setLooping(true);
+        SoundManager.gameLevel3.setVolume(0.3f);     // 30% of main volume
+        SoundManager.gameLevel3.play();
 
     }
 
@@ -169,6 +169,8 @@ public class AirWaterScreen implements Screen {
 
     @Override
     public void dispose() {
+        SoundManager.gameLevel3.dispose();
+
 
     }
 }

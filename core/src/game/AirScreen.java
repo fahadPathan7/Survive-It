@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.SoundManager;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -42,8 +43,8 @@ public class AirScreen implements Screen {
         bullets = new ArrayList<>();
 
         // background starts
-        background1 = new Texture("Background\\t11.jpeg");
-        background2 = new Texture("Background\\t11.jpeg");
+        background1 = new Texture("Background\\air1.jpeg");
+        background2 = new Texture("Background\\air2.jpeg");
         background1_x = 0;
         background2_x = 5000; // initial huge value to avoid colliding
         // background ends
@@ -54,6 +55,12 @@ public class AirScreen implements Screen {
     }
     @Override
     public void show() {
+
+        SoundManager.create();
+        SoundManager.gameLevel2.setLooping(true);
+        SoundManager.gameLevel2.setVolume(0.3f);     // 30% of main volume
+        SoundManager.gameLevel2.play();
+
 
     }
 
@@ -164,6 +171,7 @@ public class AirScreen implements Screen {
 
     @Override
     public void dispose() {
+        SoundManager.gameLevel2.dispose();
 
     }
 }
