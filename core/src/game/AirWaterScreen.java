@@ -16,15 +16,15 @@ public class AirWaterScreen implements Screen {
     Random rand; // for taking random value
 
     // bullet starts
-    ArrayList<Bullet> bullets;
-    private final float BULLET_MIN_TIME = 5f, BULLET_MAX_TIME = 10f;
-    public float bulletLaunchTime = 0f;
+    ArrayList<Monster> monsters;
+    private final float MONSTER_MIN_TIME = 1f, MONSTER_MAX_TIME = 4f;
+    public float monsterLaunchTime = 0f;
     // bullet ends
 
     // background starts
     Texture background1, background2;
     public final int BACKGROUND_HORIZONTAL_SPEED = 120;
-    int background1_x, background2_x;
+    int background1X, background2X;
     // background ends
 
     // poison animation starts
@@ -40,13 +40,13 @@ public class AirWaterScreen implements Screen {
         // creating character object
         character = new Character();
 
-        bullets = new ArrayList<>();
+        monsters = new ArrayList<>();
 
         // background starts
         background1 = new Texture("Background\\water_air.jpeg");
         background2 = new Texture("Background\\water_air.jpeg");
-        background1_x = 0;
-        background2_x = 5000; // initial huge value to avoid colliding
+        background1X = 0;
+        background2X = 5000; // initial huge value to avoid colliding
         // background ends
 
         // poison animation starts
@@ -70,42 +70,42 @@ public class AirWaterScreen implements Screen {
         character.update();
 
         // bullet starts
-        if (bulletLaunchTime <= 0) {
-            bulletLaunchTime = rand.nextFloat() * (BULLET_MAX_TIME - BULLET_MIN_TIME) + BULLET_MIN_TIME;
-            bullets.add(new Bullet());
+        monsterLaunchTime -= delta;
+        if (monsterLaunchTime <= 0) {
+            monsterLaunchTime = rand.nextFloat() * (MONSTER_MAX_TIME - MONSTER_MIN_TIME) + MONSTER_MIN_TIME;
+            monsters.add(new Monster());
         }
-        bulletLaunchTime -= delta;
 
-        ArrayList<Bullet> bulletToRemove = new ArrayList<>();
-        for (Bullet bullet : bullets) {
-            bullet.update();
-            if (bullet.remove) {
-                bulletToRemove.add(bullet);
+        ArrayList<Monster> monsterToRemove = new ArrayList<>();
+        for (Monster monster : monsters) {
+            monster.update();
+            if (monster.remove) {
+                monsterToRemove.add(monster);
             }
-            // checking if bullet is colliding with character
-            if (character.getCollision().isCollide(bullet.getCollision())) {
-                bulletToRemove.add(bullet);
+            // checking if monster is colliding with character
+            if (character.getCollision().isCollide(monster.getCollision())) {
+                monsterToRemove.add(monster);
             }
         }
-        bullets.removeAll(bulletToRemove);
+        monsters.removeAll(monsterToRemove);
 
-        // checking if bullet is colliding with character
-        bulletToRemove.clear();
-        for (Bullet bullet : bullets) {
-            if (character.getCollision().isCollide(bullet.getCollision())) {
-                bulletToRemove.add(bullet);
-            }
-        }
-        bullets.removeAll(bulletToRemove);
+//        // checking if bullet is colliding with character
+//        monsterToRemove.clear();
+//        for (Monster bullet : monsters) {
+//            if (character.getCollision().isCollide(bullet.getCollision())) {
+//                monsterToRemove.add(bullet);
+//            }
+//        }
+//        monsters.removeAll(monsterToRemove);
         // bullet ends
 
         // background starts
-        background1_x -= BACKGROUND_HORIZONTAL_SPEED * delta;
-        background2_x -= BACKGROUND_HORIZONTAL_SPEED * delta;
-        if (background1_x + background1.getWidth() < Gdx.graphics.getWidth())
-            background2_x = background1_x + background1.getWidth();
-        if (background2_x + background2.getWidth() < Gdx.graphics.getWidth())
-            background1_x = background2_x + background2.getWidth();
+        background1X -= BACKGROUND_HORIZONTAL_SPEED * delta;
+        background2X -= BACKGROUND_HORIZONTAL_SPEED * delta;
+        if (background1X + background1.getWidth() < Gdx.graphics.getWidth())
+            background2X = background1X + background1.getWidth();
+        if (background2X + background2.getWidth() < Gdx.graphics.getWidth())
+            background1X = background2X + background2.getWidth();
         // background ends
 
         // poison animation starts
@@ -126,16 +126,16 @@ public class AirWaterScreen implements Screen {
         game.batch.begin();
 
         // background starts
-        game.batch.draw(background1, background1_x, 0, background1.getWidth(), Gdx.graphics.getHeight());
-        game.batch.draw(background2, background2_x, 0, background2.getWidth(), Gdx.graphics.getHeight());
+        game.batch.draw(background1, background1X, 0, background1.getWidth(), Gdx.graphics.getHeight());
+        game.batch.draw(background2, background2X, 0, background2.getWidth(), Gdx.graphics.getHeight());
         // background ends
 
         // rendering character
         character.render(game.batch);
 
         // bullet starts
-        for (Bullet bullet : bullets) {
-            bullet.render(game.batch);
+        for (Monster monster : monsters) {
+            monster.render(game.batch);
         }
         // bullet ends
 

@@ -16,7 +16,7 @@ public class AirScreen implements Screen {
     Random rand; // for taking random value
 
     // bullet starts
-    ArrayList<Bullet> bullets;
+    ArrayList<Monster> monsters;
     private final float BULLET_MIN_TIME = 5f, BULLET_MAX_TIME = 10f;
     public float bulletLaunchTime = 0f;
     // bullet ends
@@ -40,7 +40,7 @@ public class AirScreen implements Screen {
         // creating character object
         character = new Character();
 
-        bullets = new ArrayList<>();
+        monsters = new ArrayList<>();
 
         // background starts
         background1 = new Texture("Background\\air1.jpeg");
@@ -74,31 +74,31 @@ public class AirScreen implements Screen {
         // bullet starts
         if (bulletLaunchTime <= 0) {
             bulletLaunchTime = rand.nextFloat() * (BULLET_MAX_TIME - BULLET_MIN_TIME) + BULLET_MIN_TIME;
-            bullets.add(new Bullet());
+            monsters.add(new Monster());
         }
         bulletLaunchTime -= delta;
 
-        ArrayList<Bullet> bulletToRemove = new ArrayList<>();
-        for (Bullet bullet : bullets) {
-            bullet.update();
-            if (bullet.remove) {
-                bulletToRemove.add(bullet);
+        ArrayList<Monster> monsterToRemove = new ArrayList<>();
+        for (Monster monster : monsters) {
+            monster.update();
+            if (monster.remove) {
+                monsterToRemove.add(monster);
             }
-            // checking if bullet is colliding with character
-            if (character.getCollision().isCollide(bullet.getCollision())) {
-                bulletToRemove.add(bullet);
+            // checking if monster is colliding with character
+            if (character.getCollision().isCollide(monster.getCollision())) {
+                monsterToRemove.add(monster);
             }
         }
-        bullets.removeAll(bulletToRemove);
+        monsters.removeAll(monsterToRemove);
 
         // checking if bullet is colliding with character
-        bulletToRemove.clear();
-        for (Bullet bullet : bullets) {
-            if (character.getCollision().isCollide(bullet.getCollision())) {
-                bulletToRemove.add(bullet);
+        monsterToRemove.clear();
+        for (Monster monster : monsters) {
+            if (character.getCollision().isCollide(monster.getCollision())) {
+                monsterToRemove.add(monster);
             }
         }
-        bullets.removeAll(bulletToRemove);
+        monsters.removeAll(monsterToRemove);
         // bullet ends
 
         // background starts
@@ -136,8 +136,8 @@ public class AirScreen implements Screen {
         character.render(game.batch);
 
         // bullet starts
-        for (Bullet bullet : bullets) {
-            bullet.render(game.batch);
+        for (Monster monster : monsters) {
+            monster.render(game.batch);
         }
         // bullet ends
 
