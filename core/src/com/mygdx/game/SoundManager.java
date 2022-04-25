@@ -12,6 +12,7 @@ public class SoundManager{
     public static Music gameLevel1;
 
     public static Music menu;
+    public static Music about;
 
 
 
@@ -25,13 +26,13 @@ public class SoundManager{
         gameLevel1 = Gdx.audio.newMusic(Gdx.files.internal("Audio\\gameLevel1.mp3"));
 
         menu = Gdx.audio.newMusic(Gdx.files.internal("Audio\\menu.mp3"));
-
+        about = Gdx.audio.newMusic(Gdx.files.internal("Audio\\about.mp3"));
 
 
     }
 
     public void dispose() {
-        home.dispose();
+
     }
 
 
