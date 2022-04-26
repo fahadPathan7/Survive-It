@@ -48,10 +48,6 @@ public class AirWaterScreen implements Screen {
         background1X = 0;
         background2X = 5000; // initial huge value to avoid colliding
         // background ends
-
-        // poison animation starts
-        //poisons = new ArrayList<>();
-        // poison animation ends
     }
     @Override
     public void show() {
@@ -88,15 +84,6 @@ public class AirWaterScreen implements Screen {
             }
         }
         monsters.removeAll(monsterToRemove);
-
-//        // checking if bullet is colliding with character
-//        monsterToRemove.clear();
-//        for (Monster bullet : monsters) {
-//            if (character.getCollision().isCollide(bullet.getCollision())) {
-//                monsterToRemove.add(bullet);
-//            }
-//        }
-//        monsters.removeAll(monsterToRemove);
         // bullet ends
 
         // background starts
@@ -108,20 +95,6 @@ public class AirWaterScreen implements Screen {
             background1X = background2X + background2.getWidth();
         // background ends
 
-        // poison animation starts
-//        poisonLaunchTime -= delta;
-//        if (poisonLaunchTime <= 0) {
-//            poisons.add(new Poison());
-//            poisonLaunchTime = rand.nextFloat() * (POISON_MAX_TIME - POISON_MIN_TIME) + POISON_MIN_TIME;
-//        }
-//
-//        ArrayList<Poison> poisonToRemove = new ArrayList<>();
-//        for (Poison poison : poisons) {
-//            poison.update();
-//            if (poison.poisonRemove) poisonToRemove.add(poison);
-//        }
-//        poisons.removeAll(poisonToRemove);
-        // poison animation ends
 
         game.batch.begin();
 
@@ -138,11 +111,6 @@ public class AirWaterScreen implements Screen {
             monster.render(game.batch);
         }
         // bullet ends
-
-        // for poison animation
-//        for (Poison poison : poisons) {
-//            poison.render(game.batch);
-//        }
 
         game.batch.end();
     }
@@ -170,7 +138,5 @@ public class AirWaterScreen implements Screen {
     @Override
     public void dispose() {
         SoundManager.gameLevel3.dispose();
-
-
     }
 }

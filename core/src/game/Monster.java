@@ -7,67 +7,113 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.Random;
 
 public class Monster implements ForObject{
-    Collision collision;
-    Random rand;
+    Collision collision; // collision object for checking with any other objects
+    Random rand; // for creating random value
 
-    public float monsterVerticalSpeed = 60, monsterHorizontalSpeed = 250;
-    public float monsterDistanceCorrection = monsterVerticalSpeed * Gdx.graphics.getDeltaTime();
-    public float monsterWidth = 120, monsterHeight = 56.64f; // Change
-    //public float bulletWidth = 240, bulletHeight = 200;  default
-    //public float bulletWidth = 279, bulletHeight = 150;  tortoise
-    //public float bulletWidth = 160, bulletHeight = 150;  bluebird
-    public float monsterMaxDistance = (float)Gdx.graphics.getHeight() / 2 - monsterHeight, monsterMinDistance = 0;
-    public float monsterDirection = 1;
-    float monsterX = Gdx.graphics.getWidth(), monsterY;
-    public String[] monsterImg = {"Monster\\mons1.png", "Monster\\mons2.png", "Monster\\mons3.png", "Monster\\mons4.png",
-            "Monster\\mons5.png", "Monster\\mons6.png"};
-    Texture texture;
-    public boolean remove = false;
 
+    public float monsterX = Gdx.graphics.getWidth(); // x-axis of monsters
+    public float monsterY; // y-axis of monsters (randomly created in constructor)
+    public float monsterVerticalSpeed = 60f; // vertical speed of monster
+    public float monsterHorizontalSpeed = 250f; // horizontal speed of monster
+    public float monsterWidth = 120f; // to define monster width
+    public float monsterHeight = 56.64f; // to define monster height
+    public float airMonsterSafeDistance = 5f; // air monsters safe distance from water
+    public float waterMonsterSafeDistance = 5f; // water monsters safe distance from air
+    public float waterMonsterMinDistance = 0f; // min distance of water monsters. (the lowest point they can go)
+    public float waterMonsterMaxDistance = Gdx.graphics.getHeight() / 2f - monsterHeight; // max distance of
+        // water monsters. (up to which they can go)
+    public float airMonsterMinDistance = Gdx.graphics.getHeight() / 2f; // min distance of air monsters.
+    public float airMonsterMaxDistance = Gdx.graphics.getHeight(); // max distance of air monsters
+    public float monsterDirection = 1f; // direction of water monsters. if they are going upward or downward.
+    public int waterMonsterCnt = 2; // count of water monsters
+    public int airMonsterCnt = 4; // count of air monsters
+    public String[] monsterImgLoc = {"Monster\\mons1.png", "Monster\\mons2.png", "Monster\\mons3.png",
+            "Monster\\mons4.png", "Monster\\mons5.png", "Monster\\mons6.png"}; // image location of monsters
+    Texture monsTexture; // texture for monster images
+    public boolean remove = false; // a boolean value to remove monsters after collision with character
+        // or when x-axis < 0
+
+
+    /*
+    default constructor
+     */
     public Monster() {
-        rand = new Random();
-        monsterY = rand.nextFloat() * (Gdx.graphics.getHeight() - monsterWidth);
+        rand = new Random(); // initializing random object
 
-        int idx = 0;
-        if (monsterY > monsterMaxDistance + monsterDistanceCorrection) {
-            idx = rand.nextInt(4);
-        }
-        else idx = rand.nextInt(2) + 4;
-        texture = new Texture(monsterImg[idx]);
+        monsterY = rand.nextFloat() * (Gdx.graphics.getHeight() - monsterHeight); // creating random y-axis
 
-        collision = new Collision(monsterX, monsterY, monsterWidth, monsterHeight);
+        selectMonsterTexture(); // for selecting random monster texture.
+
+        collision = new Collision(monsterX, monsterY, monsterWidth, monsterHeight); // creating collision object
     }
 
+    /*
+    updates monster's x and y-axis
+     */
     @Override
     public void update() {
-        if (monsterY >= monsterMaxDistance && monsterY <= monsterMaxDistance + monsterDistanceCorrection) {
+        // changing directing for water monsters.
+        if (monsterY >= waterMonsterMaxDistance - waterMonsterSafeDistance &&
+                monsterY <= waterMonsterMaxDistance) {
             monsterDirection *= -1;
-            monsterY = monsterMaxDistance;
+            monsterY = waterMonsterMaxDistance - waterMonsterSafeDistance;
         }
-        if (monsterY <= monsterMinDistance) {
+        else if (monsterY <= waterMonsterMinDistance) {
             monsterDirection *= -1;
-            monsterY = monsterMinDistance;
+            monsterY = waterMonsterMinDistance;
         }
 
-        if (monsterY <= monsterMaxDistance) {
+        // changing monster y-axis for water monsters
+        if (monsterY <= waterMonsterMaxDistance) {
             monsterY += monsterDirection * monsterVerticalSpeed * Gdx.graphics.getDeltaTime();
         }
-        monsterX -= monsterHorizontalSpeed * Gdx.graphics.getDeltaTime();
-        //System.out.println(bulletY); //! test
+
+        monsterX -= monsterHorizontalSpeed * Gdx.graphics.getDeltaTime(); // changing x-axis for all monsters.
+
+        // if monster is out of the screen it should be removed.
         if (monsterX + monsterWidth <= 0) {
             remove = true;
         }
 
-        collision.update(monsterX, monsterY, monsterWidth, monsterHeight);
+        collision.update(monsterX, monsterY, monsterWidth, monsterHeight); // updating collision object.
     }
 
+    /*
+    used to draw monsters.
+     */
     @Override
     public void render(SpriteBatch batch) {
-        batch.draw(texture, monsterX, monsterY, monsterWidth, monsterHeight);
+        batch.draw(monsTexture, monsterX, monsterY, monsterWidth, monsterHeight); // drawing monster.
     }
 
+    /*
+    used to check if the monster is colliding with any other object
+     */
     @Override
     public Collision getCollision() {
         return collision;
+    }
+
+    /*
+    selecting random monster according to y-axis.
+    if y-axis is in the air, the monster will be air monster.
+    if y-axis is in the water, the monster will be water monster.
+     */
+    public void selectMonsterTexture() {
+        if (monsterY > airMonsterMinDistance &&
+                monsterY <= airMonsterMinDistance + airMonsterSafeDistance) {
+            monsterY = airMonsterMinDistance + airMonsterSafeDistance;
+        }
+        else if (monsterY > waterMonsterMaxDistance - waterMonsterSafeDistance &&
+                monsterY <= waterMonsterMaxDistance + monsterHeight) {
+            monsterY = waterMonsterMaxDistance - waterMonsterSafeDistance;
+        }
+
+        int idx;
+        // if the condition is true. the monster is in the water else in air.
+        if (monsterY <= waterMonsterMaxDistance) idx = rand.nextInt(waterMonsterCnt) + airMonsterCnt;
+        else idx = rand.nextInt(airMonsterCnt); // index from 0 to airMonsterCnt - 1.
+
+        monsTexture = new Texture(monsterImgLoc[idx]); // taking texture according to index.
     }
 }

@@ -10,8 +10,11 @@ import com.badlogic.gdx.utils.Array;
 
 public class Character implements ForObject {
     float characterX = 50, characterY = 0;
-    public float characterWidth = 108, characterHeight = 140; // change
-    private final float CHARACTER_SPEED = 250;
+    public float characterWaterWidth = 108;
+    public float characterAirWidth = 70;
+    public float characterWidth = characterWaterWidth;
+    public float characterHeight = 140;
+    public static final float CHARACTER_SPEED = 250;
     Collision collision;
 
     // run animation starts
@@ -39,7 +42,7 @@ public class Character implements ForObject {
     public int jumpImgCnt = 10;
     public float jumpFrameDuration = jumpTime / (jumpRows * jumpCols);
     public float jumpMaxHeight = (float)Gdx.graphics.getHeight() / 2f - characterHeight;
-    public float jumpSpeed = jumpMaxHeight / (jumpTime / 2);
+    public final float CHARACTER_JUMP_SPEED = jumpMaxHeight / (jumpTime / 2);
     public int jumpDirection = 0;
     public boolean jumpDelay = false;
     // jump animation ends
@@ -49,7 +52,7 @@ public class Character implements ForObject {
     public boolean inAir = false;
     public float waterMinHeight = 0f;
     public float waterMaxHeight = Gdx.graphics.getHeight() / 2f - characterHeight;
-    public float airMinHeight = Gdx.graphics.getHeight() / 2f + CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
+    public float airMinHeight = Gdx.graphics.getHeight() / 2f;
     public float airMaxHeight = Gdx.graphics.getHeight() - characterHeight;
     // water, air divider ends
 
@@ -64,8 +67,6 @@ public class Character implements ForObject {
         createFlyAnimation();
 
         // creating jump animation
-        //System.out.println(jumpMaxHeight + characterHeight); //! test
-        jumpMaxHeight -= jumpSpeed * Gdx.graphics.getDeltaTime(); // correcting to avoid unnecessary collusion
         createJumpAnimation();
     }
 
@@ -74,37 +75,14 @@ public class Character implements ForObject {
         // setting character position (in air or water)
         setCharacterPosition();
 
+        // setting character movement in air
+        setCharacterAirMovement();
+
         // setting character bound (not exceeding water or air)
         setCharacterBound();
 
         // updating collision
         collision.update(characterX, characterY, characterWidth, characterHeight);
-    }
-
-    public void setCharacterPosition() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.D) && !jumpDelay) {
-            characterY = waterMinHeight;
-            inWater = true;
-            inAir = false;
-            characterWidth = 108;
-        }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.A) && !jumpDelay && !inAir) {
-            characterY = airMinHeight;
-            inAir = true;
-            inWater = false;
-            characterWidth = 70;
-        }
-    }
-
-    public void setCharacterBound() {
-        if (inWater) {
-            if (characterY <= waterMinHeight) characterY = waterMinHeight;
-            else if (characterY >= waterMaxHeight) characterY = waterMaxHeight;
-        }
-        else if (inAir) {
-            if (characterY <= airMinHeight) characterY = airMinHeight;
-            else if (characterY >= airMaxHeight) characterY = airMaxHeight;
-        }
     }
 
     @Override
@@ -118,10 +96,6 @@ public class Character implements ForObject {
             jumpStateTime = 0f;
             jumpDelay = true;
             renderJumpAnimation(batch);
-//            System.out.println(jumpFrameDuration);
-//            System.out.println(jumpSpeed);
-//            System.out.println(jumpMaxHeight);
-//            System.out.println(jumpSpeed * Gdx.graphics.getDeltaTime());
         }
         else if (characterY == 0 && !jumpDelay) {
             renderRunAnimation(batch);
@@ -136,8 +110,46 @@ public class Character implements ForObject {
         return collision;
     }
 
+    public void setCharacterPosition() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D) && !jumpDelay) {
+            inWater = true;
+            inAir = false;
+            characterY = waterMinHeight;
+            characterWidth = characterWaterWidth;
+        }
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.A) && !jumpDelay && !inAir) {
+            inAir = true;
+            inWater = false;
+            characterY = airMinHeight;
+            characterWidth = characterAirWidth;
+        }
+    }
+
+    public void setCharacterAirMovement() {
+        if (!inAir) return;
+
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            characterY += CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            characterY -= CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
+        }
+    }
+
+    public void setCharacterBound() {
+        if (inWater) {
+            if (characterY <= waterMinHeight) characterY = waterMinHeight;
+            else if (characterY >= waterMaxHeight) characterY = waterMaxHeight;
+        }
+        else if (inAir) {
+            if (characterY <= airMinHeight + CHARACTER_SPEED * Gdx.graphics.getDeltaTime()) {
+                characterY = airMinHeight + CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
+            }
+            else if (characterY >= airMaxHeight) characterY = airMaxHeight;
+        }
+    }
+
     public void createRunAnimation() {
-        // run animation starts
         Array<TextureRegion> textureRegion = new Array<>();
         for (int i = 1; i <= runImgCnt + 1; i++) {
             if (i == 6) continue;
@@ -147,18 +159,15 @@ public class Character implements ForObject {
         }
         runAnimation = new Animation<>(runFrameDuration, textureRegion);
         runStateTime = 0f;
-        // run animation ends
     }
 
     public void renderRunAnimation(SpriteBatch batch) {
-        // run animation starts
         runStateTime += Gdx.graphics.getDeltaTime();
         runStateTime %= (runFrameDuration * runImgCnt);
         runReg = (TextureRegion) runAnimation.getKeyFrame(runStateTime);
 
         batch.draw(runReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
                 characterWidth,characterHeight,1,1,0);
-        // run animation ends
     }
 
     public void createFlyAnimation() {
@@ -171,46 +180,18 @@ public class Character implements ForObject {
         }
         flyAnimation = new Animation<>(flyFrameDuration, textureRegion);
         flyStateTime = 0f;
-
-        flyAnimation = new Animation<TextureRegion>(flyFrameDuration, textureRegion);
-        flyStateTime = 0f;
     }
 
     public void renderFlyAnimation(SpriteBatch batch) {
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            characterY += CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
-        }
-        else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            characterY -= CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
-        }
-        // fly animation starts
         flyStateTime += Gdx.graphics.getDeltaTime();
         flyStateTime %= (flyFrameDuration * (flyImgCnt));
         flyReg = (TextureRegion) flyAnimation.getKeyFrame(flyStateTime);
 
         batch.draw(flyReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
                 characterWidth,characterHeight,1,1,0);
-        // fly animation ends
-//        Texture flyPic = new Texture("Fly\\f11.png");
-//        batch.draw(flyPic, characterX, characterY, characterWidth, characterHeight);
     }
 
     public void createJumpAnimation() {
-//        Texture jumpSheet = new Texture("Jump\\jump.png");
-//
-//        TextureRegion[][] jumpingTmp = TextureRegion.split(jumpSheet,
-//                jumpSheet.getWidth() / jumpCols,
-//                jumpSheet.getHeight() / jumpRows);
-//
-//        TextureRegion[] jumpFrames = new TextureRegion[jumpRows * jumpCols];
-//        int index = 0;
-//        for (int i = 0; i < jumpRows; i++) {
-//            for (int j = 0; j < jumpCols; j++) {
-//                jumpFrames[index++] = jumpingTmp[i][j];
-//            }
-//        }
-//        jumpAnimation = new Animation<TextureRegion>(jumpFrameDuration, jumpFrames);
-
         Array<TextureRegion> textureRegion = new Array<>();
         for (int i = 1; i <= jumpImgCnt; i++) {
             Texture texture = new Texture("Jump\\jump" + i + ".png");
@@ -222,25 +203,26 @@ public class Character implements ForObject {
     }
 
     public void renderJumpAnimation(SpriteBatch batch) {
+        jumpStateTime += Gdx.graphics.getDeltaTime();
+
         if (jumpDirection == 0) {
-            characterY += jumpSpeed * Gdx.graphics.getDeltaTime();
+            characterY += CHARACTER_JUMP_SPEED * Gdx.graphics.getDeltaTime();
         }
         else {
-            characterY -= jumpSpeed * Gdx.graphics.getDeltaTime();
+            characterY -= CHARACTER_JUMP_SPEED * Gdx.graphics.getDeltaTime();
         }
-        if (characterY >= jumpMaxHeight) {
+
+        if (characterY >= jumpMaxHeight - CHARACTER_JUMP_SPEED * Gdx.graphics.getDeltaTime()) {
             jumpDirection = 1;
-            //System.out.println(characterY + characterHeight); //! test
         }
-        jumpStateTime += Gdx.graphics.getDeltaTime();
 
         if (jumpStateTime >= jumpTime) {
             jumpDelay = false;
             characterY = 0;
+            return;
         }
 
         jumpReg = (TextureRegion) jumpAnimation.getKeyFrame(jumpStateTime);
-        //characterWidth = (jumpReg.getRegionWidth() / jumpReg.getRegionHeight()) * characterHeight;
         batch.draw(jumpReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
                 characterWidth,characterHeight,1,1,0);
     }
