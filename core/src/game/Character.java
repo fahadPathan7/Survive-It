@@ -82,13 +82,13 @@ public class Character implements ForObject {
     }
 
     public void setCharacterPosition() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W) && !jumpDelay) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D) && !jumpDelay) {
             characterY = waterMinHeight;
             inWater = true;
             inAir = false;
             characterWidth = 108;
         }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.S) && !jumpDelay && !inAir) {
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.A) && !jumpDelay && !inAir) {
             characterY = airMinHeight;
             inAir = true;
             inWater = false;
@@ -177,10 +177,10 @@ public class Character implements ForObject {
     }
 
     public void renderFlyAnimation(SpriteBatch batch) {
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             characterY += CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
         }
-        else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             characterY -= CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
         }
         // fly animation starts
