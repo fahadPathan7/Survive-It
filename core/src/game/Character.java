@@ -9,56 +9,68 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
 public class Character implements ForObject {
-    float characterX = 50, characterY = 0;
-    public float characterWaterWidth = 108;
-    public float characterAirWidth = 70;
-    public float characterWidth = characterWaterWidth;
-    public float characterHeight = 140;
-    public static final float CHARACTER_SPEED = 250;
-    Collision collision;
+    Collision collision; // for tracking collision of character with other objects
+
+    // character variables starts
+    public float characterX = 50; // x-axis of character
+    public float characterY = 0; // y-axis of character
+    public float characterWaterWidth = 108; // character width when in water
+    public float characterAirWidth = 70; // character width when in air
+    public float characterWidth = characterWaterWidth; // initially character is in water
+    public float characterHeight = 140; // character height is always same
+    // character variable ends
+
+    // water, air divider starts
+    public boolean inWater = true; // is the character in water or not? (initially in water)
+    public boolean inAir = false; // is the character in air or not?
+    public float waterMinHeight = 0f; // the minimum height the character can go when in water
+    public float waterMaxHeight = Gdx.graphics.getHeight() / 2f - characterHeight; // the maximum height the character
+    // can go when in water.
+    public float airMinHeight = Gdx.graphics.getHeight() / 2f; // the minimum height the character can go when in water.
+    public float airMaxHeight = Gdx.graphics.getHeight() - characterHeight; // the maximum height the character can
+    // go when in air.
+    public float safeDistanceFromAir = 6f; // to avoid unwanted collision with air objects
+    public float safeDistanceFromWater = 6f; // to avoid unwanted collision with water objects
+    // water, air divider ends
 
     // run animation starts
-    float runStateTime = 0f;
-    Animation runAnimation;
-    TextureRegion runReg;
-    public int runImgCnt = 9;
-    public float runFrameDuration = 0.075f;
+    float runStateTime = 0f; // to calculate state time for running animation
+    Animation runAnimation; // to create running animation
+    TextureRegion runReg; // for animate every texture
+    public int runImgCnt = 9; // number of images for run animation
+    public float runFrameDuration = 0.075f; // frame duration of every texture
     // run animation ends
 
     // fly animation starts
-    float flyStateTime = 0f;
-    Animation flyAnimation;
-    TextureRegion flyReg;
-    public int flyImgCnt = 5;
-    public float flyFrameDuration = 0.2f;
+    float flyStateTime = 0f; // to calculate state time for fly animation
+    Animation flyAnimation; // for creating fly animation
+    TextureRegion flyReg; // used to animate every texture
+    public int flyImgCnt = 5; // num of images for fly animation
+    public float flyFrameDuration = 0.2f; // frame duration for every fly image
+    public float characterFlySpeed = 250; // character up and down speed when flying (fps)
     // fly animation ends
 
     // jump animation starts
-    TextureRegion jumpReg;
-    public float jumpTime = 2.5f;
-    public float jumpStateTime;
-    Animation jumpAnimation;
-    public int jumpRows = 2, jumpCols = 5;
-    public int jumpImgCnt = 10;
-    public float jumpFrameDuration = jumpTime / (jumpRows * jumpCols);
-    public float jumpMaxHeight = (float)Gdx.graphics.getHeight() / 2f - characterHeight;
-    public final float CHARACTER_JUMP_SPEED = jumpMaxHeight / (jumpTime / 2);
-    public int jumpDirection = 0;
-    public boolean jumpDelay = false;
+    public float jumpStateTime; // to calculate state time
+    public float jumpTime = 2.5f; // the total time duration for jumping
+    Animation jumpAnimation; // to create jump animation
+    TextureRegion jumpReg; // to animate every texture
+    public int jumpImgCnt = 10; // num of images for jump animation
+    public float jumpFrameDuration = jumpTime / jumpImgCnt; // frame duration for every texture
+    public float jumpMaxHeight = Gdx.graphics.getHeight() / 2f - characterHeight - safeDistanceFromAir; // the maximum height
+        // the character will go while jumping.
+    public float characterJumpSpeed = jumpMaxHeight / (jumpTime / 2); // character jump speed (fps)
+    public int jumpDirection = 0; // is he going upward or downward? 0 means upward. 1 means downward.
+    public boolean jumpDelay = false; // is jumping executing or not? (other actions will be frozen while its true).
     // jump animation ends
 
-    // water, air divider starts
-    public boolean inWater = true;
-    public boolean inAir = false;
-    public float waterMinHeight = 0f;
-    public float waterMaxHeight = Gdx.graphics.getHeight() / 2f - characterHeight;
-    public float airMinHeight = Gdx.graphics.getHeight() / 2f;
-    public float airMaxHeight = Gdx.graphics.getHeight() - characterHeight;
-    // water, air divider ends
 
-
+    /*
+    default constructor.
+     */
     public Character() {
-        collision = new Collision(characterX, characterY, characterWidth, characterHeight);
+        collision = new Collision(characterX, characterY, characterWidth, characterHeight); // creating object of
+            // collision class to check for collision with objects.
 
         // creating run animation
         createRunAnimation();
@@ -70,6 +82,9 @@ public class Character implements ForObject {
         createJumpAnimation();
     }
 
+    /*
+    this method is used to update character position and different characteristics.
+     */
     @Override
     public void update() {
         // setting character position (in air or water)
@@ -85,145 +100,213 @@ public class Character implements ForObject {
         collision.update(characterX, characterY, characterWidth, characterHeight);
     }
 
+    /*
+    this method is used to render the character from desired class.
+     */
     @Override
     public void render(SpriteBatch batch) {
+        /*
+        the conditions below check which action to perform.
+         */
         if (jumpDelay) {
-            renderJumpAnimation(batch);
-        }
+            // if the jumpDelay is true the condition will be executed. and it will continue jumping until
+            // character touches the ground and jumpDelay becomes false.
 
-        if (characterY == 0 && Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !jumpDelay) {
-            jumpDirection = 0;
-            jumpStateTime = 0f;
-            jumpDelay = true;
-            renderJumpAnimation(batch);
+            renderJumpAnimation(batch); // drawing jump animation
         }
-        else if (characterY == 0 && !jumpDelay) {
-            renderRunAnimation(batch);
-        }
-        else if (characterY >= airMinHeight && !jumpDelay) {
-            renderFlyAnimation(batch);
+        else {
+            if (characterY == 0 && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                // it will jump now
+
+                jumpDirection = 0; // 0 means going upward. 1 means going downward.
+                jumpStateTime = 0f; // used to calculate how long the character is jumping. initially 0
+                jumpDelay = true; // true means until it finishes jump other actions will be frozen.
+                renderJumpAnimation(batch); // drawing jump animation
+            }
+            else if (characterY == 0) {
+                // if the character y-axis is 0, by default it will start running.
+
+                renderRunAnimation(batch); // drawing run animation.
+            }
+            else if (characterY >= airMinHeight) {
+                // if the character is in air, it will start flying.
+
+                renderFlyAnimation(batch); // drawing fly animation.
+            }
         }
     }
 
+    /*
+    the method will be called to check if there is any collision of character with any other objects.
+     */
     @Override
     public Collision getCollision() {
-        return collision;
+        return collision; // it will return an object of collision objects. which has information about character.
     }
 
+    /*
+    the method will get user input and will teleport character in water or air according to command.
+     */
     public void setCharacterPosition() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.D) && !jumpDelay) {
-            inWater = true;
-            inAir = false;
-            characterY = waterMinHeight;
-            characterWidth = characterWaterWidth;
+            // if this condition is true the character will be teleported into water. if the character is already
+            // in water or performing jump, it will not do anything.
+
+            inWater = true; // it is in water.
+            inAir = false; // leaving air
+            characterY = waterMinHeight; // setting character y-axis at the lowest point of water.
+            characterWidth = characterWaterWidth; // setting character width as the width should be in water.
         }
         else if (Gdx.input.isKeyJustPressed(Input.Keys.A) && !jumpDelay && !inAir) {
-            inAir = true;
-            inWater = false;
-            characterY = airMinHeight;
-            characterWidth = characterAirWidth;
+            // if this condition is true the character will be teleported into air. if the character is already
+            // in air or performing jump, it will not do anything.
+
+            inAir = true; // it is in air.
+            inWater = false; // leaving water.
+            characterY = airMinHeight; // // setting character y-axis at the lowest point of air.
+            characterWidth = characterAirWidth; // setting character width as the width should be in air.
         }
     }
 
+    /*
+    this method is used get user input. and do action according to command. it will shift the character up or down
+    according to command.
+     */
     public void setCharacterAirMovement() {
-        if (!inAir) return;
+        if (!inAir) return; // if the character is not in the air it will not do action. so it returned.
 
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            characterY += CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
+            // will shift the character upward.
+
+            characterY += characterFlySpeed * Gdx.graphics.getDeltaTime(); // changing y-axis
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            characterY -= CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
+            // will shift the character downward.
+
+            characterY -= characterFlySpeed * Gdx.graphics.getDeltaTime(); // changing y-axis
         }
     }
 
+    /*
+    this method is used to make sure the character is within its range both in air and water.
+     */
     public void setCharacterBound() {
         if (inWater) {
+            // checking if the character is exceeded its limit in water.
+
             if (characterY <= waterMinHeight) characterY = waterMinHeight;
-            else if (characterY >= waterMaxHeight) characterY = waterMaxHeight;
+            else if (characterY >= waterMaxHeight - safeDistanceFromAir) characterY = waterMaxHeight - safeDistanceFromAir;
         }
         else if (inAir) {
-            if (characterY <= airMinHeight + CHARACTER_SPEED * Gdx.graphics.getDeltaTime()) {
-                characterY = airMinHeight + CHARACTER_SPEED * Gdx.graphics.getDeltaTime();
+            // checking if the character is exceeding its limit in air.
+
+            if (characterY <= airMinHeight + safeDistanceFromWater) {
+                characterY = airMinHeight + safeDistanceFromWater;
             }
             else if (characterY >= airMaxHeight) characterY = airMaxHeight;
         }
     }
 
+    /*
+    this method is used to create run animation.
+     */
     public void createRunAnimation() {
-        Array<TextureRegion> textureRegion = new Array<>();
+        Array<TextureRegion> textureRegion = new Array<>(); // to store all the textures.
         for (int i = 1; i <= runImgCnt + 1; i++) {
-            if (i == 6) continue;
-            Texture texture = new Texture("Run\\r" + i + ".png");
-            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            textureRegion.add(new TextureRegion(texture));
+            if (i == 6) continue; // this image is ignored. because it's not necessary
+            Texture texture = new Texture("Run\\r" + i + ".png"); // creating new texture
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear); // filtering texture
+            textureRegion.add(new TextureRegion(texture)); // adding texture to texture region
         }
-        runAnimation = new Animation<>(runFrameDuration, textureRegion);
-        runStateTime = 0f;
+        runAnimation = new Animation<>(runFrameDuration, textureRegion); // creating animation.
+        runStateTime = 0f; // setting state time 0
     }
 
+    /*
+    to draw run animation
+     */
     public void renderRunAnimation(SpriteBatch batch) {
-        runStateTime += Gdx.graphics.getDeltaTime();
-        runStateTime %= (runFrameDuration * runImgCnt);
-        runReg = (TextureRegion) runAnimation.getKeyFrame(runStateTime);
+        runStateTime += Gdx.graphics.getDeltaTime(); // to calculate how long the character is running.
+        runStateTime %= (runFrameDuration * runImgCnt); // modded for looping the animation
+        runReg = (TextureRegion) runAnimation.getKeyFrame(runStateTime); // setting a texture for specific time period.`
 
         batch.draw(runReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
-                characterWidth,characterHeight,1,1,0);
+                characterWidth,characterHeight,1,1,0); // drawing run animation
     }
 
+    /*
+    to create fly animation
+     */
     public void createFlyAnimation() {
-        Array<TextureRegion> textureRegion = new Array<>();
+        Array<TextureRegion> textureRegion = new Array<>(); // to store all the textures.
         for (int i = 1; i <= flyImgCnt; i++) {
-            if (i == 6) continue;
-            Texture texture = new Texture("Fly\\fly" + i + ".png");
-            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            textureRegion.add(new TextureRegion(texture));
+            Texture texture = new Texture("Fly\\fly" + i + ".png"); // creating new texture
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear); // filtering texture
+            textureRegion.add(new TextureRegion(texture));// adding texture to texture region
         }
-        flyAnimation = new Animation<>(flyFrameDuration, textureRegion);
-        flyStateTime = 0f;
+        flyAnimation = new Animation<>(flyFrameDuration, textureRegion); // creating animation
+        flyStateTime = 0f; // setting state time 0
     }
 
+    /*
+    to draw run animation
+     */
     public void renderFlyAnimation(SpriteBatch batch) {
-        flyStateTime += Gdx.graphics.getDeltaTime();
-        flyStateTime %= (flyFrameDuration * (flyImgCnt));
-        flyReg = (TextureRegion) flyAnimation.getKeyFrame(flyStateTime);
+        flyStateTime += Gdx.graphics.getDeltaTime(); // to calculate how long character is flying
+        flyStateTime %= (flyFrameDuration * (flyImgCnt)); // modded for looping fly animation
+        flyReg = (TextureRegion) flyAnimation.getKeyFrame(flyStateTime); // setting a texture for a specific time period
 
         batch.draw(flyReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
-                characterWidth,characterHeight,1,1,0);
+                characterWidth,characterHeight,1,1,0); // drawing fly animation
     }
 
+    /*
+    to create jump animation
+     */
     public void createJumpAnimation() {
-        Array<TextureRegion> textureRegion = new Array<>();
+        Array<TextureRegion> textureRegion = new Array<>(); // to store all the textures
         for (int i = 1; i <= jumpImgCnt; i++) {
-            Texture texture = new Texture("Jump\\jump" + i + ".png");
-            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            textureRegion.add(new TextureRegion(texture));
+            Texture texture = new Texture("Jump\\jump" + i + ".png"); // creating new texture
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear); // filtering texture
+            textureRegion.add(new TextureRegion(texture)); // adding texture to texture region
         }
-        jumpAnimation = new Animation<>(jumpFrameDuration, textureRegion);
-        jumpStateTime = 0f;
+        jumpAnimation = new Animation<>(jumpFrameDuration, textureRegion); // creating animation
+        jumpStateTime = 0f; // setting state time 0
     }
 
+    /*
+    to draw run animation
+     */
     public void renderJumpAnimation(SpriteBatch batch) {
-        jumpStateTime += Gdx.graphics.getDeltaTime();
+        jumpStateTime += Gdx.graphics.getDeltaTime(); // to calculate how long the character is jumping
 
         if (jumpDirection == 0) {
-            characterY += CHARACTER_JUMP_SPEED * Gdx.graphics.getDeltaTime();
+            // if jumpDirection is 0, the character will go upward.
+
+            characterY += characterJumpSpeed * Gdx.graphics.getDeltaTime();
         }
         else {
-            characterY -= CHARACTER_JUMP_SPEED * Gdx.graphics.getDeltaTime();
+            // the character will go downward. (jumpDirection is 1)
+
+            characterY -= characterJumpSpeed * Gdx.graphics.getDeltaTime();
         }
 
-        if (characterY >= jumpMaxHeight - CHARACTER_JUMP_SPEED * Gdx.graphics.getDeltaTime()) {
-            jumpDirection = 1;
+        if (characterY >= jumpMaxHeight) {
+            // if the character reached higher position the direction will be changed.
+
+            jumpDirection = 1; // direction is set to 1.
         }
 
         if (jumpStateTime >= jumpTime) {
-            jumpDelay = false;
-            characterY = 0;
-            return;
+            // if jumpTime is crossed for one jump, the character will be moved to initial position and
+            // it will be ready for new action
+
+            jumpDelay = false; // jump is finished so it is false now
+            characterY = 0; // setting to initial position
         }
 
-        jumpReg = (TextureRegion) jumpAnimation.getKeyFrame(jumpStateTime);
+        jumpReg = (TextureRegion) jumpAnimation.getKeyFrame(jumpStateTime); // setting a texture for specific time period
         batch.draw(jumpReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
-                characterWidth,characterHeight,1,1,0);
+                characterWidth,characterHeight,1,1,0); // drawing animation.
     }
 }
