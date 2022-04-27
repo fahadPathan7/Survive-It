@@ -15,11 +15,12 @@ public class AirWaterScreen implements Screen {
     Character character; // reference of Character
     Random rand; // for taking random value
 
-    // bullet starts
+    // monster starts
     ArrayList<Monster> monsters;
-    private final float MONSTER_MIN_TIME = 1f, MONSTER_MAX_TIME = 4f;
+    public float monsterMinLaunchTime = 1f;
+    public float monsterMaxLaunchTime = 4f;
     public float monsterLaunchTime = 0f;
-    // bullet ends
+    // monster ends
 
     // background starts
     Texture background1, background2;
@@ -68,7 +69,7 @@ public class AirWaterScreen implements Screen {
         // bullet starts
         monsterLaunchTime -= delta;
         if (monsterLaunchTime <= 0) {
-            monsterLaunchTime = rand.nextFloat() * (MONSTER_MAX_TIME - MONSTER_MIN_TIME) + MONSTER_MIN_TIME;
+            monsterLaunchTime = rand.nextFloat() * (monsterMaxLaunchTime - monsterMinLaunchTime) + monsterMinLaunchTime;
             monsters.add(new Monster());
         }
 
