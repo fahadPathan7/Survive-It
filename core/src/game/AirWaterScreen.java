@@ -1,6 +1,7 @@
 package game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -26,6 +27,10 @@ public class AirWaterScreen implements Screen {
     ArrayList<Blast> blasts;
     // blast animation ends
 
+    // fire animation starts
+    ArrayList<Fire> fires;
+    // fire animation ends
+
     // background starts
     Texture background1, background2;
     public final int BACKGROUND_HORIZONTAL_SPEED = 120;
@@ -47,6 +52,8 @@ public class AirWaterScreen implements Screen {
         monsters = new ArrayList<>(); // for storing Monster objects
 
         blasts = new ArrayList<>(); // for storing Blast objects
+
+        fires = new ArrayList<>(); // for storing Fire objects
 
         // background starts
         background1 = new Texture("Background\\water_air.jpeg");
@@ -94,6 +101,34 @@ public class AirWaterScreen implements Screen {
         monsters.removeAll(monsterToRemove);
         // monster ends
 
+        // fire starts
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            fires.add(new Fire(character.characterX, character.characterY, character.characterWidth, character.characterHeight));
+        }
+
+        ArrayList<Fire> fireToRemove = new ArrayList<>();
+        for (Fire fire : fires) {
+            fire.update();
+            if (fire.fireRemove) fireToRemove.add(fire);
+        }
+        fires.removeAll(fireToRemove);
+
+        monsterToRemove.clear();
+        fireToRemove.clear();
+        for (Fire fire : fires) {
+            if (fire.fireRemove) fireToRemove.add(fire);
+            for (Monster monster : monsters) {
+                if (fire.getCollision().isCollide(monster.getCollision())) {
+                    fireToRemove.add(fire);
+                    blasts.add(new Blast(monster.monsterX, monster.monsterY));
+                    monsterToRemove.add(monster);
+                }
+            }
+        }
+        fires.removeAll(fireToRemove);
+        monsters.removeAll(monsterToRemove);
+        // fire ends
+
         // blast update starts
         ArrayList<Blast> blastToRemove = new ArrayList<>();
         for (Blast blast : blasts) {
@@ -127,6 +162,12 @@ public class AirWaterScreen implements Screen {
             monster.render(game.batch);
         }
         // monster ends
+
+        // fire starts
+        for (Fire fire : fires) {
+            fire.render(game.batch);
+        }
+        // fire ends
 
         // blast starts
         for (Blast blast : blasts) {
