@@ -22,6 +22,10 @@ public class AirWaterScreen implements Screen {
     public float monsterLaunchTime = 0f;
     // monster ends
 
+    // blast animation starts
+    ArrayList<Blast> blasts;
+    // blast animation ends
+
     // background starts
     Texture background1, background2;
     public final int BACKGROUND_HORIZONTAL_SPEED = 120;
@@ -38,10 +42,11 @@ public class AirWaterScreen implements Screen {
         this.game = game;
         rand = new Random();
 
-        // creating character object
-        character = new Character();
+        character = new Character(); // creating character object
 
-        monsters = new ArrayList<>();
+        monsters = new ArrayList<>(); // for storing Monster objects
+
+        blasts = new ArrayList<>(); // for storing Blast objects
 
         // background starts
         background1 = new Texture("Background\\water_air.jpeg");
@@ -66,7 +71,7 @@ public class AirWaterScreen implements Screen {
         // updating character
         character.update();
 
-        // bullet starts
+        // monster starts
         monsterLaunchTime -= delta;
         if (monsterLaunchTime <= 0) {
             monsterLaunchTime = rand.nextFloat() * (monsterMaxLaunchTime - monsterMinLaunchTime) + monsterMinLaunchTime;
@@ -81,11 +86,21 @@ public class AirWaterScreen implements Screen {
             }
             // checking if monster is colliding with character
             if (character.getCollision().isCollide(monster.getCollision())) {
+                blasts.add(new Blast(monster.monsterX, monster.monsterY)); // adding to animate blast where collision occurs.
+
                 monsterToRemove.add(monster);
             }
         }
         monsters.removeAll(monsterToRemove);
-        // bullet ends
+        // monster ends
+
+        // blast update starts
+        ArrayList<Blast> blastToRemove = new ArrayList<>();
+        for (Blast blast : blasts) {
+            if (blast.blastRemove) blastToRemove.add(blast);
+        }
+        blasts.removeAll(blastToRemove);
+        // blast update ends
 
         // background starts
         background1X -= BACKGROUND_HORIZONTAL_SPEED * delta;
@@ -107,11 +122,17 @@ public class AirWaterScreen implements Screen {
         // rendering character
         character.render(game.batch);
 
-        // bullet starts
+        // monster starts
         for (Monster monster : monsters) {
             monster.render(game.batch);
         }
-        // bullet ends
+        // monster ends
+
+        // blast starts
+        for (Blast blast : blasts) {
+            blast.renderBlastAnimation(game.batch);
+        }
+        // blast ends
 
         game.batch.end();
     }

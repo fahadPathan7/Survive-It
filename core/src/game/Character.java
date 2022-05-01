@@ -298,7 +298,7 @@ public class Character implements ForObject {
         }
 
         if (jumpStateTime >= jumpTime) {
-            // if jumpTime is crossed for one jump, the character will be moved to initial position and
+            // if jumpTime is crossed for one jump, the character will be moved to initial position, and
             // it will be ready for new action
 
             jumpDelay = false; // jump is finished so it is false now

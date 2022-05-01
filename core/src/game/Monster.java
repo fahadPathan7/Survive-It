@@ -114,6 +114,8 @@ public class Monster implements ForObject{
         if (monsterY <= waterMonsterMaxDistance) idx = rand.nextInt(waterMonsterCnt) + airMonsterCnt;
         else idx = rand.nextInt(airMonsterCnt); // index from 0 to airMonsterCnt - 1.
 
+        if (idx == 0) monsterWidth = 150.75f; // to adjust width of first monster
+
         monsTexture = new Texture(monsterImgLoc[idx]); // taking texture according to index.
     }
 }
