@@ -29,7 +29,7 @@ public class Monster implements ForObject{
     public int airMonsterCnt = 4; // count of air monsters
     public String[] monsterImgLoc = {"Monster\\mons1.png", "Monster\\mons2.png", "Monster\\mons3.png",
             "Monster\\mons4.png", "Monster\\mons5.png", "Monster\\mons6.png",
-            "Monster\\mons7.png", "Monster\\mons8.png"}; // image location of monsters
+            "Monster\\mons7.png", "Monster\\mons8.png"}; // image location of monsters (water & air)
     Texture monsTexture; // texture for monster images
     public boolean remove = false; // a boolean value to remove monsters after collision with character
         // or when x-axis < 0
