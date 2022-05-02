@@ -14,7 +14,7 @@ public class Character implements ForObject {
     // character variables starts
     public float characterX = 50; // x-axis of character
     public float characterY = 0; // y-axis of character
-    public float characterWaterWidth = 108; // character width when in water
+    public float characterWaterWidth = 100; // character width when in water
     public float characterAirWidth = 70; // character width when in air
     public float characterWidth = characterWaterWidth; // initially character is in water
     public float characterHeight = 140; // character height is always same
@@ -37,7 +37,7 @@ public class Character implements ForObject {
     float runStateTime = 0f; // to calculate state time for running animation
     Animation runAnimation; // to create running animation
     TextureRegion runReg; // for animate every texture
-    public int runImgCnt = 9; // number of images for run animation
+    public int runImgCnt = 10; // number of images for run animation
     public float runFrameDuration = 0.075f; // frame duration of every texture
     // run animation ends
 
@@ -212,8 +212,7 @@ public class Character implements ForObject {
      */
     public void createRunAnimation() {
         Array<TextureRegion> textureRegion = new Array<>(); // to store all the textures.
-        for (int i = 1; i <= runImgCnt + 1; i++) {
-            if (i == 6) continue; // this image is ignored. because it's not necessary
+        for (int i = 1; i <= runImgCnt; i++) {
             Texture texture = new Texture("Run\\r" + i + ".png"); // creating new texture
             texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear); // filtering texture
             textureRegion.add(new TextureRegion(texture)); // adding texture to texture region

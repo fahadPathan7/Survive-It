@@ -25,10 +25,11 @@ public class Monster implements ForObject{
     public float airMonsterMinDistance = Gdx.graphics.getHeight() / 2f; // min distance of air monsters.
     public float airMonsterMaxDistance = Gdx.graphics.getHeight(); // max distance of air monsters
     public float monsterDirection = 1f; // direction of water monsters. if they are going upward or downward.
-    public int waterMonsterCnt = 2; // count of water monsters
+    public int waterMonsterCnt = 4; // count of water monsters
     public int airMonsterCnt = 4; // count of air monsters
     public String[] monsterImgLoc = {"Monster\\mons1.png", "Monster\\mons2.png", "Monster\\mons3.png",
-            "Monster\\mons4.png", "Monster\\mons5.png", "Monster\\mons6.png"}; // image location of monsters
+            "Monster\\mons4.png", "Monster\\mons5.png", "Monster\\mons6.png",
+            "Monster\\mons7.png", "Monster\\mons8.png"}; // image location of monsters
     Texture monsTexture; // texture for monster images
     public boolean remove = false; // a boolean value to remove monsters after collision with character
         // or when x-axis < 0
