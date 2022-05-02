@@ -27,9 +27,11 @@ public class AirWaterScreen implements Screen {
     ArrayList<Blast> blasts;
     // blast animation ends
 
-    // fire animation starts
-    ArrayList<Fire> fires;
-    // fire animation ends
+    // spell animation starts
+    ArrayList<Spell> spells;
+    public float spellPauseTime = 0.7f;
+    public float spellStateTime = spellPauseTime;
+    // spell animation ends
 
     // background starts
     Texture background1, background2;
@@ -53,7 +55,7 @@ public class AirWaterScreen implements Screen {
 
         blasts = new ArrayList<>(); // for storing Blast objects
 
-        fires = new ArrayList<>(); // for storing Fire objects
+        spells = new ArrayList<>(); // for storing Spell objects
 
         // background starts
         background1 = new Texture("Background\\water_air.jpeg");
@@ -101,33 +103,36 @@ public class AirWaterScreen implements Screen {
         monsters.removeAll(monsterToRemove);
         // monster ends
 
-        // fire starts
-        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            fires.add(new Fire(character.characterX, character.characterY, character.characterWidth, character.characterHeight));
+        // spell starts
+        spellStateTime += Gdx.graphics.getDeltaTime();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M) && spellStateTime >= spellPauseTime) {
+            spells.add(new Spell(character.characterX, character.characterY, character.characterWidth,
+                    character.characterHeight, character.inWater));
+            spellStateTime = 0f;
         }
 
-        ArrayList<Fire> fireToRemove = new ArrayList<>();
-        for (Fire fire : fires) {
-            fire.update();
-            if (fire.fireRemove) fireToRemove.add(fire);
+        ArrayList<Spell> spellToRemove = new ArrayList<>();
+        for (Spell spell : spells) {
+            spell.update();
+            if (spell.spellRemove) spellToRemove.add(spell);
         }
-        fires.removeAll(fireToRemove);
+        spells.removeAll(spellToRemove);
 
         monsterToRemove.clear();
-        fireToRemove.clear();
-        for (Fire fire : fires) {
-            if (fire.fireRemove) fireToRemove.add(fire);
+        spellToRemove.clear();
+        for (Spell spell : spells) {
+            if (spell.spellRemove) spellToRemove.add(spell);
             for (Monster monster : monsters) {
-                if (fire.getCollision().isCollide(monster.getCollision())) {
-                    fireToRemove.add(fire);
+                if (spell.getCollision().isCollide(monster.getCollision())) {
+                    spellToRemove.add(spell);
                     blasts.add(new Blast(monster.monsterX, monster.monsterY));
                     monsterToRemove.add(monster);
                 }
             }
         }
-        fires.removeAll(fireToRemove);
+        spells.removeAll(spellToRemove);
         monsters.removeAll(monsterToRemove);
-        // fire ends
+        // spell ends
 
         // blast update starts
         ArrayList<Blast> blastToRemove = new ArrayList<>();
@@ -163,11 +168,11 @@ public class AirWaterScreen implements Screen {
         }
         // monster ends
 
-        // fire starts
-        for (Fire fire : fires) {
-            fire.render(game.batch);
+        // spell starts
+        for (Spell spell : spells) {
+            spell.render(game.batch);
         }
-        // fire ends
+        // spell ends
 
         // blast starts
         for (Blast blast : blasts) {
