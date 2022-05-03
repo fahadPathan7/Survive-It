@@ -52,7 +52,7 @@ public class Character implements ForObject {
 
     // jump animation starts
     public float jumpStateTime; // to calculate state time
-    public float jumpTime = 2.5f; // the total time duration for jumping
+    public float jumpTime = 2f; // the total time duration for jumping
     Animation jumpAnimation; // to create jump animation
     TextureRegion jumpReg; // to animate every texture
     public int jumpImgCnt = 10; // num of images for jump animation
