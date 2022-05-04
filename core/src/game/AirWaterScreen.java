@@ -35,15 +35,11 @@ public class AirWaterScreen implements Screen {
 
     // background starts
     Texture background1, background2;
-    public final int BACKGROUND_HORIZONTAL_SPEED = 120;
-    int background1X, background2X;
+    public float backgroundHorizontalSpeed = 120;
+    public float background1X = 0;
+    public float background2X = 5000; // initial huge value to avoid collision
     // background ends
 
-    // poison animation starts
-    float poisonLaunchTime = 5f;
-    ArrayList<Poison> poisons;
-    public final float POISON_MIN_TIME = 40f, POISON_MAX_TIME = 60f;
-    // poison animation ends
 
     public AirWaterScreen(MyGdxGame game) {
         this.game = game;
@@ -60,28 +56,52 @@ public class AirWaterScreen implements Screen {
         // background starts
         background1 = new Texture("Background\\water_air.jpeg");
         background2 = new Texture("Background\\water_air.jpeg");
-        background1X = 0;
-        background2X = 5000; // initial huge value to avoid colliding
         // background ends
     }
+
     @Override
     public void show() {
         SoundManager.create();
         SoundManager.gameLevel3.setLooping(true);
         SoundManager.gameLevel3.setVolume(0.3f);     // 30% of main volume
         SoundManager.gameLevel3.play();
-
     }
 
     @Override
     public void render(float delta) {
         ScreenUtils.clear(1, 1, 1, 1);
 
-        // updating character
-        character.update();
 
-        // monster starts
-        monsterLaunchTime -= delta;
+        updateObjects();
+
+        detectCollision();
+
+
+        game.batch.begin();
+
+        renderObjects();
+
+        game.batch.end();
+    }
+
+    public void updateObjects() {
+        updateCharacter();
+
+        updateMonster();
+
+        updateSpell();
+
+        updateBlast();
+
+        updateBackground();
+    }
+
+    public void updateCharacter() {
+        character.update();
+    }
+
+    public void updateMonster() {
+        monsterLaunchTime -= Gdx.graphics.getDeltaTime();
         if (monsterLaunchTime <= 0) {
             monsterLaunchTime = rand.nextFloat() * (monsterMaxLaunchTime - monsterMinLaunchTime) + monsterMinLaunchTime;
             monsters.add(new Monster());
@@ -93,17 +113,11 @@ public class AirWaterScreen implements Screen {
             if (monster.remove) {
                 monsterToRemove.add(monster);
             }
-            // checking if monster is colliding with character
-            if (character.getCollision().isCollide(monster.getCollision())) {
-                blasts.add(new Blast(monster.monsterX, monster.monsterY)); // adding to animate blast where collision occurs.
-
-                monsterToRemove.add(monster);
-            }
         }
         monsters.removeAll(monsterToRemove);
-        // monster ends
+    }
 
-        // spell starts
+    public void updateSpell() {
         spellStateTime += Gdx.graphics.getDeltaTime();
         if (Gdx.input.isKeyJustPressed(Input.Keys.M) && spellStateTime >= spellPauseTime) {
             spells.add(new Spell(character.characterX, character.characterY, character.characterWidth,
@@ -117,70 +131,98 @@ public class AirWaterScreen implements Screen {
             if (spell.spellRemove) spellToRemove.add(spell);
         }
         spells.removeAll(spellToRemove);
+    }
 
-        monsterToRemove.clear();
-        spellToRemove.clear();
-        for (Spell spell : spells) {
-            if (spell.spellRemove) spellToRemove.add(spell);
-            for (Monster monster : monsters) {
-                if (spell.getCollision().isCollide(monster.getCollision())) {
-                    spellToRemove.add(spell);
-                    blasts.add(new Blast(monster.monsterX, monster.monsterY));
-                    monsterToRemove.add(monster);
-                }
-            }
-        }
-        spells.removeAll(spellToRemove);
-        monsters.removeAll(monsterToRemove);
-        // spell ends
-
-        // blast update starts
+    public void updateBlast() {
         ArrayList<Blast> blastToRemove = new ArrayList<>();
         for (Blast blast : blasts) {
             if (blast.blastRemove) blastToRemove.add(blast);
         }
         blasts.removeAll(blastToRemove);
-        // blast update ends
+    }
 
-        // background starts
-        background1X -= BACKGROUND_HORIZONTAL_SPEED * delta;
-        background2X -= BACKGROUND_HORIZONTAL_SPEED * delta;
+    public void updateBackground() {
+        background1X -= backgroundHorizontalSpeed * Gdx.graphics.getDeltaTime();
+        background2X -= backgroundHorizontalSpeed * Gdx.graphics.getDeltaTime();
+
         if (background1X + background1.getWidth() < Gdx.graphics.getWidth())
             background2X = background1X + background1.getWidth();
         if (background2X + background2.getWidth() < Gdx.graphics.getWidth())
             background1X = background2X + background2.getWidth();
-        // background ends
+    }
 
+    public void detectCollision() {
+        characterWithMonsterCollision();
 
-        game.batch.begin();
+        spellWithMonsterCollision();
+    }
 
-        // background starts
+    public void characterWithMonsterCollision() {
+        ArrayList<Monster> monsterToRemove = new ArrayList<>();
+        for (Monster monster : monsters) {
+            if (character.getCollision().isCollide(monster.getCollision())) {
+                monsterToRemove.add(monster);
+
+                blasts.add(new Blast(monster.monsterX, monster.monsterY));
+            }
+        }
+        monsters.removeAll(monsterToRemove);
+    }
+
+    public void spellWithMonsterCollision() {
+        ArrayList<Monster> monsterToRemove = new ArrayList<>();
+        ArrayList<Spell> spellToRemove = new ArrayList<>();
+        for (Spell spell : spells) {
+            for (Monster monster : monsters) {
+                if (spell.getCollision().isCollide(monster.getCollision())) {
+                    spellToRemove.add(spell);
+                    monsterToRemove.add(monster);
+
+                    blasts.add(new Blast(monster.monsterX, monster.monsterY));
+                }
+            }
+        }
+        monsters.removeAll(monsterToRemove);
+        spells.removeAll(spellToRemove);
+    }
+
+    public void renderObjects() {
+        renderBackground();
+
+        renderCharacter();
+
+        renderMonster();
+
+        renderSpell();
+
+        renderBlast();
+    }
+
+    public void renderBackground() {
         game.batch.draw(background1, background1X, 0, background1.getWidth(), Gdx.graphics.getHeight());
         game.batch.draw(background2, background2X, 0, background2.getWidth(), Gdx.graphics.getHeight());
-        // background ends
+    }
 
-        // rendering character
+    public void renderCharacter() {
         character.render(game.batch);
+    }
 
-        // monster starts
+    public void renderMonster() {
         for (Monster monster : monsters) {
             monster.render(game.batch);
         }
-        // monster ends
+    }
 
-        // spell starts
+    public void renderSpell() {
         for (Spell spell : spells) {
             spell.render(game.batch);
         }
-        // spell ends
+    }
 
-        // blast starts
+    public void renderBlast() {
         for (Blast blast : blasts) {
             blast.renderBlastAnimation(game.batch);
         }
-        // blast ends
-
-        game.batch.end();
     }
 
     @Override

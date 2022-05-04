@@ -248,7 +248,7 @@ public class Character implements ForObject {
     }
 
     /*
-    to draw run animation
+    to draw fly animation
      */
     public void renderFlyAnimation(SpriteBatch batch) {
         flyStateTime += Gdx.graphics.getDeltaTime(); // to calculate how long character is flying
@@ -274,7 +274,7 @@ public class Character implements ForObject {
     }
 
     /*
-    to draw run animation
+    to draw jump animation
      */
     public void renderJumpAnimation(SpriteBatch batch) {
         jumpStateTime += Gdx.graphics.getDeltaTime(); // to calculate how long the character is jumping
