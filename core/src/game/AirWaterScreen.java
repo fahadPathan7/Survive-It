@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.SoundManager;
 
@@ -33,11 +32,20 @@ public class AirWaterScreen implements Screen {
     public float spellStateTime = spellPauseTime;
     // spell animation ends
 
+    // score starts
+    Score score;
+    public int tempScore;
+    public int monsterHitPoint = 100;
+    public int monsterMissPoint = -50;
+    public int spellMissPoint = -20;
+    public int collisionPoint = -300;
+    // score ends
+
     // background starts
-    Texture background1, background2;
+    Texture background;
     public float backgroundHorizontalSpeed = 120;
     public float background1X = 0;
-    public float background2X = 5000; // initial huge value to avoid collision
+    public float background2X;
     // background ends
 
 
@@ -47,6 +55,8 @@ public class AirWaterScreen implements Screen {
 
         character = new Character(); // creating character object
 
+        score = new Score(game.batch); // creating score object
+
         monsters = new ArrayList<>(); // for storing Monster objects
 
         blasts = new ArrayList<>(); // for storing Blast objects
@@ -54,8 +64,8 @@ public class AirWaterScreen implements Screen {
         spells = new ArrayList<>(); // for storing Spell objects
 
         // background starts
-        background1 = new Texture("Background\\water_air.jpeg");
-        background2 = new Texture("Background\\water_air.jpeg");
+        background = new Texture("Background\\water_air.jpeg");
+        background2X = background.getWidth();
         // background ends
     }
 
@@ -69,9 +79,6 @@ public class AirWaterScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(1, 1, 1, 1);
-
-
         updateObjects();
 
         detectCollision();
@@ -85,6 +92,8 @@ public class AirWaterScreen implements Screen {
     }
 
     public void updateObjects() {
+        updateBackground();
+
         updateCharacter();
 
         updateMonster();
@@ -93,7 +102,7 @@ public class AirWaterScreen implements Screen {
 
         updateBlast();
 
-        updateBackground();
+        updateScore();
     }
 
     public void updateCharacter() {
@@ -112,6 +121,8 @@ public class AirWaterScreen implements Screen {
             monster.update();
             if (monster.remove) {
                 monsterToRemove.add(monster);
+
+                tempScore += monsterMissPoint; // updating score
             }
         }
         monsters.removeAll(monsterToRemove);
@@ -128,7 +139,11 @@ public class AirWaterScreen implements Screen {
         ArrayList<Spell> spellToRemove = new ArrayList<>();
         for (Spell spell : spells) {
             spell.update();
-            if (spell.spellRemove) spellToRemove.add(spell);
+            if (spell.spellRemove) {
+                spellToRemove.add(spell);
+
+                tempScore += spellMissPoint; // updating score
+            }
         }
         spells.removeAll(spellToRemove);
     }
@@ -145,10 +160,15 @@ public class AirWaterScreen implements Screen {
         background1X -= backgroundHorizontalSpeed * Gdx.graphics.getDeltaTime();
         background2X -= backgroundHorizontalSpeed * Gdx.graphics.getDeltaTime();
 
-        if (background1X + background1.getWidth() < Gdx.graphics.getWidth())
-            background2X = background1X + background1.getWidth();
-        if (background2X + background2.getWidth() < Gdx.graphics.getWidth())
-            background1X = background2X + background2.getWidth();
+        if (background1X + background.getWidth() <= 0)
+            background1X = background2X + background.getWidth();
+        if (background2X + background.getWidth() <= 0)
+            background2X = background1X + background.getWidth();
+    }
+
+    public void updateScore() {
+        score.update(tempScore);
+        tempScore = 0;
     }
 
     public void detectCollision() {
@@ -164,6 +184,8 @@ public class AirWaterScreen implements Screen {
                 monsterToRemove.add(monster);
 
                 blasts.add(new Blast(monster.monsterX, monster.monsterY));
+
+                tempScore += collisionPoint; // updating score
             }
         }
         monsters.removeAll(monsterToRemove);
@@ -179,6 +201,8 @@ public class AirWaterScreen implements Screen {
                     monsterToRemove.add(monster);
 
                     blasts.add(new Blast(monster.monsterX, monster.monsterY));
+
+                    tempScore += monsterHitPoint; // updating score
                 }
             }
         }
@@ -196,11 +220,13 @@ public class AirWaterScreen implements Screen {
         renderSpell();
 
         renderBlast();
+
+        renderScore();
     }
 
     public void renderBackground() {
-        game.batch.draw(background1, background1X, 0, background1.getWidth(), Gdx.graphics.getHeight());
-        game.batch.draw(background2, background2X, 0, background2.getWidth(), Gdx.graphics.getHeight());
+        game.batch.draw(background, background1X, 0, background.getWidth(), Gdx.graphics.getHeight());
+        game.batch.draw(background, background2X, 0, background.getWidth(), Gdx.graphics.getHeight());
     }
 
     public void renderCharacter() {
@@ -223,6 +249,10 @@ public class AirWaterScreen implements Screen {
         for (Blast blast : blasts) {
             blast.renderBlastAnimation(game.batch);
         }
+    }
+
+    public void renderScore() {
+        score.render(game.batch);
     }
 
     @Override
