@@ -17,8 +17,8 @@ public class Monster implements ForObject{
     public float monsterHorizontalSpeed = 250f; // horizontal speed of monster
     public float monsterWidth = 120f; // to define monster width
     public float monsterHeight = 56.64f; // to define monster height
-    public float airMonsterSafeDistance = 15f; // air monsters safe distance from water
-    public float waterMonsterSafeDistance = 5f; // water monsters safe distance from air
+    public float airMonsterSafeDistance = 20f; // air monsters safe distance from water
+    public float waterMonsterSafeDistance = 10f; // water monsters safe distance from air
     public float waterMonsterMinDistance = 0f; // min distance of water monsters. (the lowest point they can go)
     public float waterMonsterMaxDistance = Gdx.graphics.getHeight() / 2f - monsterHeight; // max distance of
         // water monsters. (up to which they can go)

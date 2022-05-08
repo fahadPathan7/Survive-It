@@ -43,7 +43,7 @@ public class AirWaterScreen implements Screen {
 
     // background starts
     Texture background;
-    public float backgroundHorizontalSpeed = 120;
+    public float backgroundHorizontalSpeed = 160;
     public float background1X = 0;
     public float background2X;
     // background ends
