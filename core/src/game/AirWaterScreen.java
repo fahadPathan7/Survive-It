@@ -32,7 +32,7 @@ public class AirWaterScreen implements Screen {
     // spell animation ends
 
     // score starts
-    Score score;
+    Score totalScore;
     public int tempScore;
     public int monsterHitPoint = 100;
     public int monsterMissPoint = -50;
@@ -64,9 +64,9 @@ public class AirWaterScreen implements Screen {
     // sound off
 
     // health bar start
-    Texture healthbar;
+    Texture healthBar;
     public float health = 1  ;  // 0 dead ; 1 full health
-    public float healthbarHeight = 10 ;
+    public float healthBarHeight = 10 ;
     public float healthDamage = .05f;
     // health bar ends
 
@@ -77,7 +77,7 @@ public class AirWaterScreen implements Screen {
 
         character = new Character(); // creating character object
 
-        score = new Score(game.batch); // creating score object
+        totalScore = new Score(game.batch); // creating score object
 
         monsters = new ArrayList<>(); // for storing Monster objects
 
@@ -96,7 +96,7 @@ public class AirWaterScreen implements Screen {
         // pause screen ends
 
         // health bar starts
-        healthbar = new Texture("Healthbar\\blank.png");
+        healthBar = new Texture("Healthbar\\blank.png");
         // health bar ends
     }
 
@@ -221,7 +221,7 @@ public class AirWaterScreen implements Screen {
     }
 
     public void updateScore() {
-        score.update(tempScore);
+        totalScore.update(tempScore);
         tempScore = 0;
     }
 
@@ -405,7 +405,7 @@ public class AirWaterScreen implements Screen {
     }
 
     public void renderScore() {
-        score.render(game.batch);
+        totalScore.render(game.batch);
     }
 
     public void renderPause() {
@@ -417,7 +417,7 @@ public class AirWaterScreen implements Screen {
     }
 
     public void renderHealthBar(){
-        game.batch.draw(healthbar,0,0,Gdx.graphics.getWidth() * health , healthbarHeight);
+        game.batch.draw(healthBar,0,0,Gdx.graphics.getWidth() * health , healthBarHeight);
     }
 
     @Override
