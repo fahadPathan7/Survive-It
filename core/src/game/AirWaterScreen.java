@@ -4,10 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
-import com.mygdx.game.GameMenuScreen;
-import com.mygdx.game.MainMenuScreen;
-import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.SoundManager;
+import com.mygdx.game.*;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -67,9 +64,10 @@ public class AirWaterScreen implements Screen {
     // sound off
 
     // health bar start
-    public float health = 1  ;  // 0 dead ; 1 full health
     Texture healthbar;
+    public float health = 1  ;  // 0 dead ; 1 full health
     public float healthbarHeight = 10 ;
+    public float healthDamage = .05f;
     // health bar ends
 
 
@@ -98,7 +96,7 @@ public class AirWaterScreen implements Screen {
         // pause screen ends
 
         // health bar starts
-        healthbar = new Texture("blank.png");
+        healthbar = new Texture("Healthbar\\blank.png");
         // health bar ends
     }
 
@@ -263,8 +261,16 @@ public class AirWaterScreen implements Screen {
 
                 blasts.add(new Blast(monster.monsterX, monster.monsterY));
 
-                tempScore += collisionPoint; // updating score
-                health -= 0.05;               // health update
+                tempScore += collisionPoint;           // updating score
+                health -= healthDamage;               // health update
+
+                // If health == 0 switch to end screen
+                if(health <= 0)
+                {
+                    this.dispose();
+                    game.setScreen(new EndScreen(game));
+                }
+                // Ends
 
 
             }
