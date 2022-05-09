@@ -34,6 +34,9 @@ public class AirWaterScreen implements Screen {
     // score starts
     Score totalScore;
     public int tempScore;
+    public int consecutiveKillsCnt = 0;
+    public int consecutiveKillsToGetPoint = 5;
+    public int consecutiveKillsPoint = 250;
     public int monsterHitPoint = 100;
     public int monsterMissPoint = -50;
     public int spellMissPoint = -20;
@@ -184,6 +187,7 @@ public class AirWaterScreen implements Screen {
                 monsterToRemove.add(monster);
 
                 tempScore += monsterMissPoint; // updating score
+                consecutiveKillsCnt = 0;
             }
         }
         monsters.removeAll(monsterToRemove);
@@ -204,6 +208,7 @@ public class AirWaterScreen implements Screen {
                 spellToRemove.add(spell);
 
                 tempScore += spellMissPoint; // updating score
+                consecutiveKillsCnt = 0;
             }
         }
         spells.removeAll(spellToRemove);
@@ -277,6 +282,7 @@ public class AirWaterScreen implements Screen {
                 blasts.add(new Blast(monster.monsterX, monster.monsterY));
 
                 tempScore += collisionPoint;           // updating score
+                consecutiveKillsCnt = 0;
                 health -= healthDamage;               // health update
 
                 // If health == 0 switch to end screen
@@ -305,6 +311,11 @@ public class AirWaterScreen implements Screen {
                     blasts.add(new Blast(monster.monsterX, monster.monsterY));
 
                     tempScore += monsterHitPoint; // updating score
+                    consecutiveKillsCnt++;
+                    if (consecutiveKillsCnt == consecutiveKillsToGetPoint) {
+                        tempScore += consecutiveKillsPoint;
+                        consecutiveKillsCnt = 0;
+                    }
                 }
             }
         }
