@@ -66,6 +66,12 @@ public class AirWaterScreen implements Screen {
     public boolean music = true;
     // sound off
 
+    // health bar start
+    public float health = 1  ;  // 0 dead ; 1 full health
+    Texture healthbar;
+    public float healthbarHeight = 10 ;
+    // health bar ends
+
 
     public AirWaterScreen(MyGdxGame game) {
         this.game = game;
@@ -90,6 +96,10 @@ public class AirWaterScreen implements Screen {
         status = false ;
         pause = new Texture("Pause\\pause.png");
         // pause screen ends
+
+        // health bar starts
+        healthbar = new Texture("blank.png");
+        // health bar ends
     }
 
     @Override
@@ -254,6 +264,9 @@ public class AirWaterScreen implements Screen {
                 blasts.add(new Blast(monster.monsterX, monster.monsterY));
 
                 tempScore += collisionPoint; // updating score
+                health -= 0.05;               // health update
+
+
             }
         }
         monsters.removeAll(monsterToRemove);
@@ -292,6 +305,8 @@ public class AirWaterScreen implements Screen {
         renderScore();
 
         renderPauseIcon();
+
+        renderHealthBar();
 
     }
 
@@ -393,6 +408,10 @@ public class AirWaterScreen implements Screen {
 
     public void renderPauseIcon(){
         game.batch.draw(pauseIcon, pauseIconX, pauseIconY ,90, 80);
+    }
+
+    public void renderHealthBar(){
+        game.batch.draw(healthbar,0,0,Gdx.graphics.getWidth() * health , healthbarHeight);
     }
 
     @Override
