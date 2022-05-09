@@ -16,7 +16,7 @@ public class EndScreen implements Screen {
 
         this.game = game;
 
-        endscreen = new Texture("EndScreen\\End.png");
+        endscreen = new Texture("EndScreen\\2.png");
 
     }
 
