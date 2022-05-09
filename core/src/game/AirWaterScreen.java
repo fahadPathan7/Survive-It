@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.mygdx.game.GameMenuScreen;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.SoundManager;
 
@@ -49,6 +50,14 @@ public class AirWaterScreen implements Screen {
     // background ends
 
 
+    // pause screen start
+    Texture pause;
+    public int pauseScreenX = 0;
+    public int pauseScreenY = 0;
+    public boolean status  ;
+    // pause screen ends
+
+
     public AirWaterScreen(MyGdxGame game) {
         this.game = game;
         rand = new Random();
@@ -67,6 +76,11 @@ public class AirWaterScreen implements Screen {
         background = new Texture("Background\\water_air.jpeg");
         background2X = background.getWidth();
         // background ends
+
+        // pause screen set starts
+        status = false ;
+        pause = new Texture("Background\\21.jpeg");
+        // pause screen ends
     }
 
     @Override
@@ -79,14 +93,23 @@ public class AirWaterScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        updateObjects();
 
-        detectCollision();
+        updatePauseScreen();
+        if(!status)
+        {
+            updateObjects();
+            detectCollision();
+        }
+        
+        else{
+            // * working in pause screen
 
+        }
 
         game.batch.begin();
 
-        renderObjects();
+        if(!status)renderObjects();
+        else renderPause();
 
         game.batch.end();
     }
@@ -103,6 +126,7 @@ public class AirWaterScreen implements Screen {
         updateBlast();
 
         updateScore();
+
     }
 
     public void updateCharacter() {
@@ -171,6 +195,17 @@ public class AirWaterScreen implements Screen {
         tempScore = 0;
     }
 
+    public void updatePauseScreen()
+    {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+
+            if(!status)status = true;
+            else status = false;
+            //System.out.println(status);
+        }
+
+    }
+
     public void detectCollision() {
         characterWithMonsterCollision();
 
@@ -222,6 +257,8 @@ public class AirWaterScreen implements Screen {
         renderBlast();
 
         renderScore();
+
+
     }
 
     public void renderBackground() {
@@ -253,6 +290,11 @@ public class AirWaterScreen implements Screen {
 
     public void renderScore() {
         score.render(game.batch);
+    }
+
+    public void renderPause()
+    {
+        game.batch.draw(pause, pauseScreenX, pauseScreenY,pause.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override
