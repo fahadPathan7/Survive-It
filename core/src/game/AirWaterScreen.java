@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.GameMenuScreen;
+import com.mygdx.game.MainMenuScreen;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.SoundManager;
 
@@ -57,6 +58,10 @@ public class AirWaterScreen implements Screen {
     public boolean status  ;
     // pause screen ends
 
+    // sound start
+    public boolean music = true;
+    // sound off
+
 
     public AirWaterScreen(MyGdxGame game) {
         this.game = game;
@@ -79,20 +84,18 @@ public class AirWaterScreen implements Screen {
 
         // pause screen set starts
         status = false ;
-        pause = new Texture("Background\\21.jpeg");
+        pause = new Texture("Pause\\pause.png");
         // pause screen ends
     }
 
     @Override
     public void show() {
-        SoundManager.create();
-        SoundManager.gameLevel3.setLooping(true);
-        SoundManager.gameLevel3.setVolume(0.3f);     // 30% of main volume
-        SoundManager.gameLevel3.play();
+        soundbar();
     }
 
     @Override
     public void render(float delta) {
+
 
         updatePauseScreen();
         if(!status)
@@ -100,9 +103,10 @@ public class AirWaterScreen implements Screen {
             updateObjects();
             detectCollision();
         }
-        
+
         else{
             // * working in pause screen
+            showPauseMenu();
 
         }
 
@@ -127,6 +131,17 @@ public class AirWaterScreen implements Screen {
 
         updateScore();
 
+    }
+
+    public void soundbar(){
+        if(music)
+        {
+            SoundManager.create();
+            SoundManager.gameLevel3.setLooping(true);
+            SoundManager.gameLevel3.setVolume(0.3f);     // 30% of main volume
+            SoundManager.gameLevel3.play();
+
+        }
     }
 
     public void updateCharacter() {
@@ -195,8 +210,7 @@ public class AirWaterScreen implements Screen {
         tempScore = 0;
     }
 
-    public void updatePauseScreen()
-    {
+    public void updatePauseScreen() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
 
             if(!status)status = true;
@@ -259,6 +273,60 @@ public class AirWaterScreen implements Screen {
         renderScore();
 
 
+    }
+
+    public void showPauseMenu()
+    {
+        if (Gdx.input.getX() >= 538 && Gdx.input.getX() <= 1023 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 705
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 788) {
+            if (Gdx.input.isTouched()) {
+                status = false ;
+            }
+        }
+
+        if (Gdx.input.getX() >= 538 && Gdx.input.getX() <= 1023 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 586
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 586 + 83) {
+            if (Gdx.input.isTouched()) {
+                this.dispose();
+                game.setScreen(new AirWaterScreen(game));
+            }
+        }
+
+        if (Gdx.input.getX() >= 538 && Gdx.input.getX() <= 1023 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 478
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 478 + 83) {
+            if (Gdx.input.isTouched()) {
+                this.dispose();
+                game.setScreen(new GameMenuScreen(game));
+            }
+        }
+
+        if (Gdx.input.getX() >= 538 && Gdx.input.getX() <= 1023 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 388
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 388 + 83) {
+            if (Gdx.input.isTouched()) {
+                music = true;
+            }
+        }
+
+        if (Gdx.input.getX() >= 538 && Gdx.input.getX() <= 1023 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 365
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 365 + 83) {
+            if (Gdx.input.isTouched()) {
+                SoundManager.gameLevel3.stop();
+                SoundManager.gameLevel3.play();
+            }
+        }
+
+        if (Gdx.input.getX() >= 538 && Gdx.input.getX() <= 1023 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 250
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 250 + 83) {
+            if (Gdx.input.isTouched()) {
+                SoundManager.gameLevel3.stop();
+            }
+        }
     }
 
     public void renderBackground() {
