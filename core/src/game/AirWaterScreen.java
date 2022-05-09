@@ -53,8 +53,12 @@ public class AirWaterScreen implements Screen {
 
     // pause screen start
     Texture pause;
+    Texture pauseIcon;
     public int pauseScreenX = 0;
     public int pauseScreenY = 0;
+    public float iconHeight = 77f;
+    public float pauseIconX = 0 ;
+    public float pauseIconY = Gdx.graphics.getHeight() - iconHeight;
     public boolean status  ;
     // pause screen ends
 
@@ -102,6 +106,7 @@ public class AirWaterScreen implements Screen {
         {
             updateObjects();
             detectCollision();
+
         }
 
         else{
@@ -130,6 +135,8 @@ public class AirWaterScreen implements Screen {
         updateBlast();
 
         updateScore();
+
+        showPauseIcon();
 
     }
 
@@ -210,6 +217,18 @@ public class AirWaterScreen implements Screen {
         tempScore = 0;
     }
 
+    public void showPauseIcon(){
+        pauseIcon = new Texture("Pause\\icon.png");
+
+        if (Gdx.input.getX() >= 0 && Gdx.input.getX() <= 90 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= pauseIconY
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= pauseIconY+90) {
+            if (Gdx.input.isTouched()) {
+                status = true ;
+            }
+        }
+    }
+
     public void updatePauseScreen() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
 
@@ -272,11 +291,11 @@ public class AirWaterScreen implements Screen {
 
         renderScore();
 
+        renderPauseIcon();
 
     }
 
-    public void showPauseMenu()
-    {
+    public void showPauseMenu() {
         if (Gdx.input.getX() >= 538 && Gdx.input.getX() <= 1023 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 705
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 788) {
@@ -360,9 +379,12 @@ public class AirWaterScreen implements Screen {
         score.render(game.batch);
     }
 
-    public void renderPause()
-    {
+    public void renderPause() {
         game.batch.draw(pause, pauseScreenX, pauseScreenY,pause.getWidth(), Gdx.graphics.getHeight());
+    }
+
+    public void renderPauseIcon(){
+        game.batch.draw(pauseIcon, pauseIconX, pauseIconY ,90, 80);
     }
 
     @Override
