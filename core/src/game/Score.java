@@ -18,7 +18,7 @@ public class Score{
     public float digitX;
     public float digitY = Gdx.graphics.getHeight() - digitHeight - digitExtraDistance;
 
-    public float negativeSignWidth = 20;
+    public float negativeSignWidth = 30;
     public float negativeSignHeight = 10;
     public float negativeSignX;
     public float negativeSignExtraDistance = 10f;

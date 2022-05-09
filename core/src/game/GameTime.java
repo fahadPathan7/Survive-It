@@ -32,8 +32,8 @@ public class GameTime {
 
     public float sCharacterX;
     public float sCharacterY = digitY;
-    public float sCharacterWidth = 25f;
-    public float sCharacterHeight = 25f;
+    public float sCharacterWidth = 30f;
+    public float sCharacterHeight = 30f;
     Texture sTexture;
 
 
@@ -47,7 +47,7 @@ public class GameTime {
     }
 
     public void render(SpriteBatch batch) {
-        int temp = (int)time;
+        int temp = (int)totalGameDuration - (int)time;
         int temp1 = (int)time;
 
         Stack<Integer> stack = new Stack<>();
@@ -73,13 +73,13 @@ public class GameTime {
         if (time >= totalGameDuration) {
             batch.draw(transparentDigitTexture[0], transparentDigitX, transparentDigitY, transparentDigitWidth, transparentDigitHeight);
         }
-        else if ((int)totalGameDuration - temp1 <= 1) {
+        else if (temp1 >= (int)totalGameDuration - 1) {
             batch.draw(transparentDigitTexture[1], transparentDigitX, transparentDigitY, transparentDigitWidth, transparentDigitHeight);
         }
-        else if ((int)totalGameDuration - temp1 <= 2) {
+        else if (temp1 >= (int)totalGameDuration - 2) {
             batch.draw(transparentDigitTexture[2], transparentDigitX, transparentDigitY, transparentDigitWidth, transparentDigitHeight);
         }
-        else if ((int)totalGameDuration - temp1 <= 3) {
+        else if (temp1 >= (int)totalGameDuration - 3) {
             batch.draw(transparentDigitTexture[3], transparentDigitX, transparentDigitY, transparentDigitWidth, transparentDigitHeight);
         }
     }
