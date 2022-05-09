@@ -65,6 +65,15 @@ public class GameMenuScreen implements Screen {
             }
         }
 
+        if (Gdx.input.getX() >= 176 && Gdx.input.getX() <= 520 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 115
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 225) {
+            if (Gdx.input.isTouched()) {
+
+                System.exit(0);
+            }
+        }
+
         game.batch.begin();
 
         game.batch.draw(menuBackground, menuBackgroundX, menuBackgroundY);

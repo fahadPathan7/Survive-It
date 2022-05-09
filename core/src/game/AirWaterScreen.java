@@ -346,6 +346,14 @@ public class AirWaterScreen implements Screen {
                 SoundManager.gameLevel3.stop();
             }
         }
+
+        if (Gdx.input.getX() >= 538 && Gdx.input.getX() <= 1023 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 140
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 140 + 83) {
+            if (Gdx.input.isTouched()) {
+                System.exit(0);
+            }
+        }
     }
 
     public void renderBackground() {
