@@ -70,6 +70,10 @@ public class AirWaterScreen implements Screen {
     public float healthDamage = .05f;
     // health bar ends
 
+    // game time starts
+    GameTime gameTime; // declaring GameTime object
+    // game time ends
+
 
     public AirWaterScreen(MyGdxGame game) {
         this.game = game;
@@ -84,6 +88,8 @@ public class AirWaterScreen implements Screen {
         blasts = new ArrayList<>(); // for storing Blast objects
 
         spells = new ArrayList<>(); // for storing Spell objects
+
+        gameTime = new GameTime(); // creating GameTime object
 
         // background starts
         background = new Texture("Background\\water_air.jpeg");
@@ -146,6 +152,7 @@ public class AirWaterScreen implements Screen {
 
         showPauseIcon();
 
+        updateGameTime();
     }
 
     public void soundbar(){
@@ -247,6 +254,14 @@ public class AirWaterScreen implements Screen {
 
     }
 
+    public void updateGameTime() {
+        gameTime.update();
+        if (gameTime.gameEnd) {
+            this.dispose();
+            game.setScreen(new EndScreen(game));
+        }
+    }
+
     public void detectCollision() {
         characterWithMonsterCollision();
 
@@ -314,6 +329,7 @@ public class AirWaterScreen implements Screen {
 
         renderHealthBar();
 
+        renderGameTime();
     }
 
     public void showPauseMenu() {
@@ -418,6 +434,10 @@ public class AirWaterScreen implements Screen {
 
     public void renderHealthBar(){
         game.batch.draw(healthBar,0,0,Gdx.graphics.getWidth() * health , healthBarHeight);
+    }
+
+    public void renderGameTime() {
+        gameTime.render(game.batch);
     }
 
     @Override

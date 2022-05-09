@@ -24,6 +24,7 @@ public class Score{
     public float negativeSignExtraDistance = 10f;
     public float negativeSignY = Gdx.graphics.getHeight() - negativeSignExtraDistance - digitHeight / 2f - negativeSignHeight / 2f;
     public float negativeSignAndDigitGap = 5f;
+    Texture negativeSignTexture;
 
     public Score(SpriteBatch batch) {
         setDigitTexture();
@@ -53,9 +54,8 @@ public class Score{
         digitX = Gdx.graphics.getWidth() / 2f - tempWidth / 2f;
 
         if (score < 0) {
-            Texture texture = new Texture("Score\\negative.png");
             negativeSignX = digitX;
-            batch.draw(texture, negativeSignX, negativeSignY, negativeSignWidth, negativeSignHeight);
+            batch.draw(negativeSignTexture, negativeSignX, negativeSignY, negativeSignWidth, negativeSignHeight);
             digitX += negativeSignWidth + negativeSignAndDigitGap;
         }
 
@@ -68,7 +68,9 @@ public class Score{
     public void setDigitTexture() {
         digitTexture = new Texture[digitCnt];
         for (int i = 0; i < digitCnt; i++) {
-            digitTexture[i] = new Texture("Score\\" + i + ".png");
+            digitTexture[i] = new Texture("Digit\\" + i + ".png");
         }
+
+        negativeSignTexture = new Texture("Digit\\negative.png");
     }
 }
