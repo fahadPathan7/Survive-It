@@ -535,7 +535,7 @@ public class AirWaterScreen implements Screen {
         }
 
         game.batch.draw(healthBar,0,0,Gdx.graphics.getWidth() * health , healthBarHeight);
-        System.out.println(Gdx.graphics.getWidth() * health);
+        //System.out.println(Gdx.graphics.getWidth() * health);
     }
 
     public void renderGameTime() {
