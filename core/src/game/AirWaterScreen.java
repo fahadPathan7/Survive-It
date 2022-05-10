@@ -109,7 +109,7 @@ public class AirWaterScreen implements Screen {
         // pause screen ends
 
         // health bar starts
-        healthBar = new Texture("Healthbar\\red.png");
+        healthBar = new Texture("Healthbar\\green.png");
         // health bar ends
     }
 
@@ -517,7 +517,25 @@ public class AirWaterScreen implements Screen {
 
     public void renderHealthBar(){
 
+        float status = Gdx.graphics.getWidth() * health ;
+
+        if( status < 1200 && status >= 700 )
+        {
+            healthBar = new Texture("Healthbar\\yellow.png");
+        }
+
+        else if(status < 690 && status >= 435)
+        {
+            healthBar = new Texture("Healthbar\\orange.png");
+        }
+
+        else if(status < 425 )
+        {
+            healthBar = new Texture("Healthbar\\red.png");
+        }
+
         game.batch.draw(healthBar,0,0,Gdx.graphics.getWidth() * health , healthBarHeight);
+        System.out.println(Gdx.graphics.getWidth() * health);
     }
 
     public void renderGameTime() {
