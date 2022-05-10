@@ -24,6 +24,8 @@ public class EndScreen implements Screen {
     @Override
     public void show() {
 
+
+
     }
 
     @Override

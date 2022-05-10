@@ -6,8 +6,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.*;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 public class AirWaterScreen implements Screen {
     MyGdxGame game; // reference of MyGdxGame
@@ -70,7 +74,7 @@ public class AirWaterScreen implements Screen {
     Texture healthBar;
     public float health = 1  ;  // 0 dead ; 1 full health
     public float healthBarHeight = 10 ;
-    public float healthDamage = .05f;
+    public float healthDamage = .17f;
     // health bar ends
 
     // game time starts
@@ -105,7 +109,7 @@ public class AirWaterScreen implements Screen {
         // pause screen ends
 
         // health bar starts
-        healthBar = new Texture("Healthbar\\blank.png");
+        healthBar = new Texture("Healthbar\\red.png");
         // health bar ends
     }
 
@@ -170,6 +174,7 @@ public class AirWaterScreen implements Screen {
     }
 
     public void updateCharacter() {
+
         character.update();
     }
 
@@ -262,6 +267,8 @@ public class AirWaterScreen implements Screen {
     public void updateGameTime() {
         gameTime.update();
         if (gameTime.gameEnd) {
+            //System.out.println(totalScore.score);
+            setHighScore();
             this.dispose();
             game.setScreen(new EndScreen(game));
         }
@@ -288,6 +295,7 @@ public class AirWaterScreen implements Screen {
                 // If health == 0 switch to end screen
                 if(health <= 0)
                 {
+                    setHighScore();
                     this.dispose();
                     game.setScreen(new EndScreen(game));
                 }
@@ -297,6 +305,60 @@ public class AirWaterScreen implements Screen {
             }
         }
         monsters.removeAll(monsterToRemove);
+    }
+
+    public void setHighScore(){
+
+        int score = totalScore.score ;
+        String curr_score = Integer.toString(score);
+
+        File file = new File("highestScore.txt");
+
+        try {
+            // * check if file exists or not
+            if (file.createNewFile()) {
+                
+                //System.out.println("File created: " + file.getName());
+                // * if no file push current score ,no need compare
+
+                FileWriter writeInto = new FileWriter("highestScore.txt");
+                writeInto.write(curr_score);
+                writeInto.close();
+
+            } else {
+
+                //System.out.println("File already exists.");
+
+                Scanner readInto = new Scanner(file);
+                
+                while (readInto.hasNextLine()) {
+                    
+                    String pastData = readInto.nextLine();
+                    int pastScore = Integer.parseInt(pastData);
+
+                    // comparing past score with current score
+                    if(pastScore < score)
+                    {
+                        //System.out.println("compare");
+
+                        //clear all data in file
+                        new FileWriter("highestScore.txt", false).close();
+
+                        //write the new high score
+                        FileWriter writeInto = new FileWriter("highestScore.txt");
+                        writeInto.write(curr_score);
+                        writeInto.close();
+                    }
+
+                }
+                readInto.close();
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void spellWithMonsterCollision() {
@@ -410,6 +472,7 @@ public class AirWaterScreen implements Screen {
     }
 
     public void renderCharacter() {
+
         character.render(game.batch);
     }
 
@@ -432,6 +495,7 @@ public class AirWaterScreen implements Screen {
     }
 
     public void renderScore() {
+
         totalScore.render(game.batch);
     }
 
@@ -440,14 +504,17 @@ public class AirWaterScreen implements Screen {
     }
 
     public void renderPauseIcon(){
+
         game.batch.draw(pauseIcon, pauseIconX, pauseIconY ,90, 80);
     }
 
     public void renderHealthBar(){
+
         game.batch.draw(healthBar,0,0,Gdx.graphics.getWidth() * health , healthBarHeight);
     }
 
     public void renderGameTime() {
+
         gameTime.render(game.batch);
     }
 
@@ -473,6 +540,7 @@ public class AirWaterScreen implements Screen {
 
     @Override
     public void dispose() {
+
         SoundManager.gameLevel3.dispose();
     }
 }

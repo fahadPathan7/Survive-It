@@ -26,6 +26,9 @@ public class Score{
     public float negativeSignAndDigitGap = 5f;
     Texture negativeSignTexture;
 
+    // * for highScore Screen
+    public float minusHeight = 0;
+
     public Score(SpriteBatch batch) {
         setDigitTexture();
     }
@@ -55,12 +58,12 @@ public class Score{
 
         if (score < 0) {
             negativeSignX = digitX;
-            batch.draw(negativeSignTexture, negativeSignX, negativeSignY, negativeSignWidth, negativeSignHeight);
+            batch.draw(negativeSignTexture, negativeSignX, negativeSignY-minusHeight, negativeSignWidth, negativeSignHeight);
             digitX += negativeSignWidth + negativeSignAndDigitGap;
         }
 
         while (!stack.empty()) {
-            batch.draw(digitTexture[stack.pop()], digitX, digitY, digitWidth, digitHeight);
+            batch.draw(digitTexture[stack.pop()], digitX, digitY-minusHeight, digitWidth, digitHeight);
             digitX += digitWidth;
         }
     }

@@ -47,6 +47,7 @@ public class GameMenuScreen implements Screen {
 
         ScreenUtils.clear(1, 1, 1, 1);
 
+        // start
         if (Gdx.input.getX() >= 176 && Gdx.input.getX() <= 520 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 790
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 890) {
@@ -56,6 +57,27 @@ public class GameMenuScreen implements Screen {
             }
         }
 
+        // tutorial
+        if (Gdx.input.getX() >= 176 && Gdx.input.getX() <= 520 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 625
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 725) {
+            if (Gdx.input.isTouched()) {
+                this.dispose();
+                game.setScreen(new TutorialScreen(game));
+            }
+        }
+
+        // high score
+        if (Gdx.input.getX() >= 176 && Gdx.input.getX() <= 520 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 454
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 554) {
+            if (Gdx.input.isTouched()) {
+                this.dispose();
+                game.setScreen(new HighScoreScreen(game));
+            }
+        }
+
+        // about us
         if (Gdx.input.getX() >= 176 && Gdx.input.getX() <= 520 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 285
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 385) {
@@ -65,6 +87,7 @@ public class GameMenuScreen implements Screen {
             }
         }
 
+        // exit
         if (Gdx.input.getX() >= 176 && Gdx.input.getX() <= 520 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 115
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 225) {
