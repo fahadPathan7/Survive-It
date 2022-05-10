@@ -37,6 +37,15 @@ public class AboutScreen implements Screen {
 
         ScreenUtils.clear(1, 1, 1, 1);
 
+        if (Gdx.input.getX() >= 305 && Gdx.input.getX() <= 7855 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 25
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 95) {
+            if (Gdx.input.isTouched()) {
+                this.dispose();
+                game.setScreen(new GameMenuScreen(game));
+            }
+        }
+
         game.batch.begin();
 
         game.batch.draw(image, 0,0);
