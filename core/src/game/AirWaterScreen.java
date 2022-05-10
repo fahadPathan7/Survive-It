@@ -74,7 +74,7 @@ public class AirWaterScreen implements Screen {
     Texture healthBar;
     public float health = 1  ;  // 0 dead ; 1 full health
     public float healthBarHeight = 10 ;
-    public float healthDamage = .17f;
+    public float healthDamage = .15f;
     // health bar ends
 
     // game time starts
@@ -268,7 +268,7 @@ public class AirWaterScreen implements Screen {
         gameTime.update();
         if (gameTime.gameEnd) {
             //System.out.println(totalScore.score);
-            setHighScore();
+            setScoreAndHighScore();
             this.dispose();
             game.setScreen(new EndScreen(game));
         }
@@ -295,7 +295,7 @@ public class AirWaterScreen implements Screen {
                 // If health == 0 switch to end screen
                 if(health <= 0)
                 {
-                    setHighScore();
+                    setScoreAndHighScore();
                     this.dispose();
                     game.setScreen(new EndScreen(game));
                 }
@@ -307,14 +307,21 @@ public class AirWaterScreen implements Screen {
         monsters.removeAll(monsterToRemove);
     }
 
-    public void setHighScore(){
+    public void setScoreAndHighScore(){
 
         int score = totalScore.score ;
         String curr_score = Integer.toString(score);
 
         File file = new File("highestScore.txt");
+        File file2 = new File("score.txt");
 
         try {
+            // * save current score in
+            new FileWriter("score.txt", false).close();
+            FileWriter writeIntoFile = new FileWriter("score.txt");
+            writeIntoFile.write(curr_score);
+            writeIntoFile.close();
+
             // * check if file exists or not
             if (file.createNewFile()) {
                 
