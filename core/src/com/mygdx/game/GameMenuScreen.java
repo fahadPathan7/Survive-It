@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
-import game.AirWaterScreen;
 
 public class GameMenuScreen implements Screen {
 
@@ -45,7 +44,7 @@ public class GameMenuScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        ScreenUtils.clear(1, 1, 1, 1);
+        //ScreenUtils.clear(1, 1, 1, 1);
 
         // start
         if (Gdx.input.getX() >= 176 && Gdx.input.getX() <= 520 &&
@@ -53,7 +52,8 @@ public class GameMenuScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 890) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
-                game.setScreen(new AirWaterScreen(game));
+                //game.setScreen(new AirWaterScreen(game));
+                game.setScreen(new IntroScreen(game));
             }
         }
 
