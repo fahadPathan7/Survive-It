@@ -9,21 +9,23 @@ public class GameMenuScreen implements Screen {
 
     MyGdxGame game;
 
+    // backgrounds start
     Texture menuBackground;
-    int menuBackgroundX ,menuBackgroundY;
+    int menuBackgroundX = 0 ;
+    int menuBackgroundY = 0;
+    // backgrounds ends
 
     public GameMenuScreen(MyGdxGame game) {
 
         this.game = game;
 
-        menuBackgroundX = 0;
-        menuBackgroundY = 0;
-        menuBackground = new Texture("Background\\menu.png") ;
-
     }
 
     @Override
     public void show() {
+
+        menuBackground = new Texture("Background\\menu.png") ;
+
         SoundManager.create();
         SoundManager.menu.setLooping(true);
         SoundManager.menu.setVolume(0.4f);     // 50% of main volume
@@ -33,8 +35,6 @@ public class GameMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
-        //ScreenUtils.clear(1, 1, 1, 1);
 
         // start
         if (Gdx.input.getX() >= 176 && Gdx.input.getX() <= 520 &&
@@ -118,6 +118,8 @@ public class GameMenuScreen implements Screen {
 
     @Override
     public void dispose() {
+
         SoundManager.menu.dispose();
+        menuBackground.dispose();
     }
 }

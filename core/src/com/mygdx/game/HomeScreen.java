@@ -98,9 +98,9 @@ public class HomeScreen implements Screen {
 
         game.batch.begin();
 
-        changeBackGround();
-
         game.batch.draw(mainBackground[state], mainBackgroundX, mainBackgroundY);
+
+        changeBackGround();
 
         game.batch.draw(playButton, playButtonX, playButtonY,150,150);
 
@@ -173,6 +173,13 @@ public class HomeScreen implements Screen {
 
         SoundManager.home.dispose();
         playButton.dispose();
+        mainBackground[0].dispose();
+        mainBackground[1].dispose();
+        mainBackground[2].dispose();
+        mainBackground[3].dispose();
+        mainBackground[4].dispose();
+        mainBackground[5].dispose();
+
 
     }
 }

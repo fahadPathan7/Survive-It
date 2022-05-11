@@ -26,6 +26,11 @@ public class SoundManager{
 
     public void dispose() {
 
+        home.dispose();
+        gameLevel3.dispose();
+        menu.dispose();
+        about.dispose();
+
     }
 
 

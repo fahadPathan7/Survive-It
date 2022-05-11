@@ -71,7 +71,8 @@ public class AirWaterScreen implements Screen {
     // sound off
 
     // health bar start
-    Texture healthBar;
+    Texture[] healthBar = new Texture[4];
+    public int state = 0 ;
     public float health = 1  ;  // 0 dead ; 1 full health
     public float healthBarHeight = 10 ;
     public float healthDamage = .19f;
@@ -84,6 +85,7 @@ public class AirWaterScreen implements Screen {
 
     public AirWaterScreen(MyGdxGame game) {
         this.game = game;
+
         rand = new Random();
 
         character = new Character(); // creating character object
@@ -98,6 +100,11 @@ public class AirWaterScreen implements Screen {
 
         gameTime = new GameTime(); // creating GameTime object
 
+    }
+
+    @Override
+    public void show() {
+
         // background starts
         background = new Texture("Background\\water_air.jpeg");
         background2X = background.getWidth();
@@ -106,23 +113,24 @@ public class AirWaterScreen implements Screen {
         // pause screen set starts
         status = false ;
         pause = new Texture("Pause\\pause.png");
+        pauseIcon = new Texture("Pause\\icon.png");
         // pause screen ends
 
         // health bar starts
-        healthBar = new Texture("Healthbar\\green.png");
+        healthBar[0] = new Texture("Healthbar\\green.png");
+        healthBar[1] = new Texture("Healthbar\\yellow.png");
+        healthBar[2] = new Texture("Healthbar\\orange.png");
+        healthBar[3] = new Texture("Healthbar\\red.png");
         // health bar ends
-    }
 
-    @Override
-    public void show() {
         soundbar();
     }
 
     @Override
     public void render(float delta) {
 
-
         updatePauseScreen();
+
         if(!status)
         {
             updateObjects();
@@ -131,9 +139,7 @@ public class AirWaterScreen implements Screen {
         }
 
         else{
-            // * working in pause screen
             showPauseMenu();
-
         }
 
         game.batch.begin();
@@ -243,7 +249,6 @@ public class AirWaterScreen implements Screen {
     }
 
     public void showPauseIcon(){
-        pauseIcon = new Texture("Pause\\icon.png");
 
         if (Gdx.input.getX() >= 0 && Gdx.input.getX() <= 90 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= pauseIconY
@@ -313,8 +318,6 @@ public class AirWaterScreen implements Screen {
         String curr_score = Integer.toString(score);
 
         File file = new File("highestScore.txt");
-        File file2 = new File("score.txt");
-
         try {
             // * save current score in
             new FileWriter("score.txt", false).close();
@@ -324,7 +327,7 @@ public class AirWaterScreen implements Screen {
 
             // * check if file exists or not
             if (file.createNewFile()) {
-                
+
                 //System.out.println("File created: " + file.getName());
                 // * if no file push current score ,no need compare
 
@@ -519,23 +522,12 @@ public class AirWaterScreen implements Screen {
 
         float status = Gdx.graphics.getWidth() * health ;
 
-        if( status < 1200 && status >= 700 )
-        {
-            healthBar = new Texture("Healthbar\\yellow.png");
-        }
+        if( status < 1200 && status >= 700 ) state = 1;
+        else if(status < 690 && status >= 400) state = 2;
+        else if(status < 400 ) state = 3 ;
 
-        else if(status < 690 && status >= 400)
-        {
-            healthBar = new Texture("Healthbar\\orange.png");
-        }
+        game.batch.draw(healthBar[state],0,0,Gdx.graphics.getWidth() * health , healthBarHeight);
 
-        else if(status < 400 )
-        {
-            healthBar = new Texture("Healthbar\\red.png");
-        }
-
-        game.batch.draw(healthBar,0,0,Gdx.graphics.getWidth() * health , healthBarHeight);
-        //System.out.println(Gdx.graphics.getWidth() * health);
     }
 
     public void renderGameTime() {
@@ -567,5 +559,13 @@ public class AirWaterScreen implements Screen {
     public void dispose() {
 
         SoundManager.gameLevel3.dispose();
+
+        background.dispose();
+        pause.dispose();
+        pauseIcon.dispose();
+        healthBar[0].dispose();
+        healthBar[1].dispose();
+        healthBar[2].dispose();
+        healthBar[3].dispose();
     }
 }
