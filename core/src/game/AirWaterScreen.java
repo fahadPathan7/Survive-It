@@ -40,7 +40,7 @@ public class AirWaterScreen implements Screen {
     public int tempScore;
     public int consecutiveKillsCnt = 0;
     public int consecutiveKillsToGetPoint = 5;
-    public int consecutiveKillsPoint = 250;
+    public int consecutiveKillsPoint = 280;
     public int monsterHitPoint = 100;
     public int monsterMissPoint = -50;
     public int spellMissPoint = -20;
