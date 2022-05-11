@@ -1,9 +1,9 @@
 package com.mygdx.game;
 
+import Intro.IntroScreen1;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameMenuScreen implements Screen {
 
@@ -12,12 +12,6 @@ public class GameMenuScreen implements Screen {
     Texture menuBackground;
     int menuBackgroundX ,menuBackgroundY;
 
-    Texture gameName ;
-    int gameNameX , gameNameY;
-
-    private final float TEXT_WIDTH = 500;
-    private final float TEXT_HEIGHT = 500;
-
     public GameMenuScreen(MyGdxGame game) {
 
         this.game = game;
@@ -25,10 +19,6 @@ public class GameMenuScreen implements Screen {
         menuBackgroundX = 0;
         menuBackgroundY = 0;
         menuBackground = new Texture("Background\\menu.png") ;
-
-        gameNameX = 700;
-        gameNameY = 10;
-        gameName = new Texture("Background\\gamename.png");
 
     }
 
@@ -53,7 +43,7 @@ public class GameMenuScreen implements Screen {
             if (Gdx.input.isTouched()) {
                 this.dispose();
                 //game.setScreen(new AirWaterScreen(game));
-                game.setScreen(new IntroScreen(game));
+                game.setScreen(new IntroScreen1(game));
             }
         }
 

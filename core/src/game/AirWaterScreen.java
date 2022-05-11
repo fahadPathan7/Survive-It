@@ -74,7 +74,7 @@ public class AirWaterScreen implements Screen {
     Texture healthBar;
     public float health = 1  ;  // 0 dead ; 1 full health
     public float healthBarHeight = 10 ;
-    public float healthDamage = .15f;
+    public float healthDamage = .19f;
     // health bar ends
 
     // game time starts
@@ -524,12 +524,12 @@ public class AirWaterScreen implements Screen {
             healthBar = new Texture("Healthbar\\yellow.png");
         }
 
-        else if(status < 690 && status >= 435)
+        else if(status < 690 && status >= 400)
         {
             healthBar = new Texture("Healthbar\\orange.png");
         }
 
-        else if(status < 425 )
+        else if(status < 400 )
         {
             healthBar = new Texture("Healthbar\\red.png");
         }

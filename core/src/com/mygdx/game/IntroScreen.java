@@ -1,31 +1,33 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import game.AirWaterScreen;
-import game.Score;
 
 public class IntroScreen implements Screen {
 
     MyGdxGame game;
-    Score totalScore ;
 
-    Texture background;
-
+    Texture[] background = new Texture[6];
+    int state = 0;
 
     public IntroScreen(MyGdxGame game) {
 
         this.game = game;
-        totalScore = new Score(game.batch);
-
-        background = new Texture("Intro\\1.png");
 
     }
 
-
     @Override
     public void show() {
+
+        background[0] = new Texture("Intro\\1.png");
+        background[1] = new Texture("Intro\\2.png");
+        background[2] = new Texture("Intro\\3.png");
+        background[3] = new Texture("Intro\\4.png");
+        background[4] = new Texture("Intro\\5.png");
+        background[5] = new Texture("Intro\\6.png");
 
     }
 
@@ -33,23 +35,35 @@ public class IntroScreen implements Screen {
     public void render(float delta) {
 
 
+        // Any time skip button
         if (Gdx.input.getX() >= 1430 && Gdx.input.getX() <= 1630 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 50
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 117) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
                 game.setScreen(new AirWaterScreen(game));
-                //game.setScreen(new IntroScreen(game));
             }
         }
 
         game.batch.begin();
 
-        game.batch.draw(background,0,0);
+        game.batch.draw(background[state],0,0);
+
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
+        {
+            state--;
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+        {
+            state++;
+        }
+
 
         game.batch.end();
 
     }
+
 
     @Override
     public void resize(int width, int height) {
@@ -73,6 +87,8 @@ public class IntroScreen implements Screen {
 
     @Override
     public void dispose() {
+
+        //background1.dispose();
 
     }
 }
