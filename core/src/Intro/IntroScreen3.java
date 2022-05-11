@@ -44,9 +44,9 @@ public class IntroScreen3 implements Screen {
         if (Gdx.input.getX() >= 1544 && Gdx.input.getX() <= 1666 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 423
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 558) {
-            if (Gdx.input.isTouched()) {
+            if (Gdx.input.justTouched()) {
                 this.dispose();
-                game.setScreen(new IntroScreen3(game));
+                game.setScreen(new IntroScreen4(game));
 
             }
         }
@@ -54,7 +54,7 @@ public class IntroScreen3 implements Screen {
         if (Gdx.input.getX() >= 30 && Gdx.input.getX() <= 155 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 423
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 558) {
-            if (Gdx.input.isTouched()) {
+            if (Gdx.input.justTouched()) {
                 this.dispose();
                 game.setScreen(new IntroScreen2(game));
             }
@@ -94,7 +94,6 @@ public class IntroScreen3 implements Screen {
     @Override
     public void dispose() {
 
-       // background3.dispose();
 
     }
 }
