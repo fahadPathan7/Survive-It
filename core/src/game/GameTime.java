@@ -9,7 +9,7 @@ import java.util.Stack;
 
 public class GameTime {
     public float time = 0f;
-    public float totalGameDuration = 60f;
+    public float totalGameDuration = 105f;
     public boolean gameEnd = false;
 
 
