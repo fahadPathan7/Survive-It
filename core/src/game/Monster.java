@@ -17,13 +17,14 @@ public class Monster implements ForObject{
     public float monsterHorizontalSpeed = 250f; // horizontal speed of monster
     public float monsterWidth = 120f; // to define monster width
     public float monsterHeight = 56.64f; // to define monster height
-    public float airMonsterSafeDistance = 20f; // air monsters safe distance from water
-    public float waterMonsterSafeDistance = 10f; // water monsters safe distance from air
+    public float airMonsterSafeDistanceFromWater = 20f; // air monsters safe distance from water
+    public float waterMonsterSafeDistanceFromAir = 10f; // water monsters safe distance from air
     public float waterMonsterMinDistance = 0f; // min distance of water monsters. (the lowest point they can go)
     public float waterMonsterMaxDistance = Gdx.graphics.getHeight() / 2f - monsterHeight; // max distance of
         // water monsters. (up to which they can go)
     public float airMonsterMinDistance = Gdx.graphics.getHeight() / 2f; // min distance of air monsters.
-    public float airMonsterMaxDistance = Gdx.graphics.getHeight(); // max distance of air monsters
+    public float airMonsterSafeDistanceFromUp = 65f;
+    public float airMonsterMaxDistance = Gdx.graphics.getHeight() - airMonsterSafeDistanceFromUp; // max distance of air monsters
     public float monsterDirection = 1f; // direction of water monsters. if they are going upward or downward.
     public int waterMonsterCnt = 4; // count of water monsters
     public int airMonsterCnt = 4; // count of air monsters
@@ -54,10 +55,10 @@ public class Monster implements ForObject{
     @Override
     public void update() {
         // changing directing for water monsters.
-        if (monsterY >= waterMonsterMaxDistance - waterMonsterSafeDistance &&
+        if (monsterY >= waterMonsterMaxDistance - waterMonsterSafeDistanceFromAir &&
                 monsterY <= waterMonsterMaxDistance) {
             monsterDirection *= -1;
-            monsterY = waterMonsterMaxDistance - waterMonsterSafeDistance;
+            monsterY = waterMonsterMaxDistance - waterMonsterSafeDistanceFromAir;
         }
         else if (monsterY <= waterMonsterMinDistance) {
             monsterDirection *= -1;
@@ -101,13 +102,21 @@ public class Monster implements ForObject{
     if y-axis is in the water, the monster will be water monster.
      */
     public void selectMonsterTexture() {
+        // the conditions are to make sure that no monsters are crossing their limit (water monsters their upper
+        // limit and air monsters their lower limit). e.g., water monsters may get into
+        // air for their speed (a short distance. like 5pixel/ 6pixel) and make a collision.
         if (monsterY > airMonsterMinDistance &&
-                monsterY <= airMonsterMinDistance + airMonsterSafeDistance) {
-            monsterY = airMonsterMinDistance + airMonsterSafeDistance;
+                monsterY <= airMonsterMinDistance + airMonsterSafeDistanceFromWater) {
+            monsterY = airMonsterMinDistance + airMonsterSafeDistanceFromWater;
         }
-        else if (monsterY > waterMonsterMaxDistance - waterMonsterSafeDistance &&
+        else if (monsterY > waterMonsterMaxDistance - waterMonsterSafeDistanceFromAir &&
                 monsterY <= waterMonsterMaxDistance + monsterHeight) {
-            monsterY = waterMonsterMaxDistance - waterMonsterSafeDistance;
+            monsterY = waterMonsterMaxDistance - waterMonsterSafeDistanceFromAir;
+        }
+
+        // the condition is to make sure that air monsters are not crossing their maximum distance.
+        if (monsterY + monsterHeight > airMonsterMaxDistance) {
+            monsterY = airMonsterMaxDistance - monsterHeight;
         }
 
         int idx;

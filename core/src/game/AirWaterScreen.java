@@ -60,9 +60,10 @@ public class AirWaterScreen implements Screen {
     Texture pauseIcon;
     public int pauseScreenX = 0;
     public int pauseScreenY = 0;
-    public float iconHeight = 77f;
-    public float pauseIconX = 0 ;
-    public float pauseIconY = Gdx.graphics.getHeight() - iconHeight;
+    public float pauseIconWidth = 60f;
+    public float pauseIconHeight = 50f;
+    public float pauseIconX = 20f;
+    public float pauseIconY = Gdx.graphics.getHeight() - pauseIconHeight - 10f;
     public boolean status  ;
     // pause screen ends
 
@@ -548,7 +549,7 @@ public class AirWaterScreen implements Screen {
 
     public void renderPauseIcon(){
 
-        game.batch.draw(pauseIcon, pauseIconX, pauseIconY ,90, 80);
+        game.batch.draw(pauseIcon, pauseIconX, pauseIconY ,pauseIconWidth, pauseIconHeight);
     }
 
     public void renderHealthBar(){
@@ -564,7 +565,7 @@ public class AirWaterScreen implements Screen {
     }
 
     public void renderMute(){
-        if(showMute) game.batch.draw(mute, 1520, 890,50,50);
+        if(showMute) game.batch.draw(mute, 1500, 895,45,45);
     }
 
     public void renderGameTime() {

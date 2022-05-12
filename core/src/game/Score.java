@@ -12,11 +12,11 @@ public class Score{
     Texture[] digitTexture;
 
     public int digitCnt = 10;
-    public float digitExtraDistance = 10f;
+    public float digitExtraDistanceYAxis = 10f;
     public float digitWidth = 30f;
     public float digitHeight = 40f;
     public float digitX;
-    public float digitY = Gdx.graphics.getHeight() - digitHeight - digitExtraDistance;
+    public float digitY = Gdx.graphics.getHeight() - digitHeight - digitExtraDistanceYAxis;
 
     public float negativeSignWidth = 30;
     public float negativeSignHeight = 10;

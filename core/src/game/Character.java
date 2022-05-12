@@ -28,7 +28,7 @@ public class Character implements ForObject {
     public float waterMaxHeight = Gdx.graphics.getHeight() / 2f - characterHeight; // the maximum height the character
     // can go when in water.
     public float airMinHeight = Gdx.graphics.getHeight() / 2f; // the minimum height the character can go when in water.
-    public float airMaxHeight = Gdx.graphics.getHeight() - characterHeight; // the maximum height the character can
+    public float airMaxHeight = Gdx.graphics.getHeight() - characterHeight - 60f; // the maximum height the character can
     // go when in air.
     public float safeDistanceFromAir = 6f; // to avoid unwanted collision with air objects
     public float safeDistanceFromWater = 6f; // to avoid unwanted collision with water objects
