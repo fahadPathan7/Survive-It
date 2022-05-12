@@ -180,7 +180,7 @@ public class AirWaterScreen implements Screen {
 
         SoundManager.create();
         SoundManager.gameLevel3.setLooping(true);
-        SoundManager.gameLevel3.setVolume(0.1f);
+        SoundManager.gameLevel3.setVolume(0.05f);
         SoundManager.collisionWithEmeny.setVolume(0.05f);
         SoundManager.blast.setVolume(0.4f);
 
@@ -313,6 +313,7 @@ public class AirWaterScreen implements Screen {
                 consecutiveKillsCnt = 0;
                 health -= healthDamage;               // health update
 
+                SoundManager.collisionWithEmeny.dispose();
                 SoundManager.collisionWithEmeny.play();
 
                 // If health == 0 switch to end screen
@@ -401,6 +402,8 @@ public class AirWaterScreen implements Screen {
                     blasts.add(new Blast(monster.monsterX, monster.monsterY));
 
                     tempScore += monsterHitPoint; // updating score
+
+                    SoundManager.blast.dispose();
                     SoundManager.blast.play();
 
                     consecutiveKillsCnt++;
@@ -597,6 +600,8 @@ public class AirWaterScreen implements Screen {
         SoundManager.collisionWithEmeny.dispose();
         SoundManager.click.dispose();
         SoundManager.jump.dispose();
+        SoundManager.countdown.dispose();
+        SoundManager.surfaceChange.dispose();
 
         mute.dispose();
 

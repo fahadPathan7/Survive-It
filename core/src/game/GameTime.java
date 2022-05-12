@@ -3,6 +3,7 @@ package game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.SoundManager;
 
 import java.util.Stack;
 
@@ -81,6 +82,7 @@ public class GameTime {
         }
         else if (temp1 >= (int)totalGameDuration - 3) {
             batch.draw(transparentDigitTexture[3], transparentDigitX, transparentDigitY, transparentDigitWidth, transparentDigitHeight);
+            SoundManager.countdown.play();
         }
     }
 

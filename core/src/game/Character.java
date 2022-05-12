@@ -158,6 +158,9 @@ public class Character implements ForObject {
             inAir = false; // leaving air
             characterY = waterMinHeight; // setting character y-axis at the lowest point of water.
             characterWidth = characterWaterWidth; // setting character width as the width should be in water.
+
+            SoundManager.surfaceChange.dispose();
+            SoundManager.surfaceChange.play();
         }
         else if (Gdx.input.isKeyJustPressed(Input.Keys.A) && !jumpDelay && !inAir) {
             // if this condition is true the character will be teleported into air. if the character is already
@@ -167,6 +170,10 @@ public class Character implements ForObject {
             inWater = false; // leaving water.
             characterY = airMinHeight; // // setting character y-axis at the lowest point of air.
             characterWidth = characterAirWidth; // setting character width as the width should be in air.
+
+            SoundManager.surfaceChange.dispose();
+            SoundManager.surfaceChange.play();
+
         }
     }
 

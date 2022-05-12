@@ -23,6 +23,9 @@ public class SoundManager{
 
 
     public static Music click ;
+    public static Music countdown ;
+    public static Music surfaceChange ;
+
 
     public static void create()
     {
@@ -43,9 +46,13 @@ public class SoundManager{
         jump= Gdx.audio.newMusic(Gdx.files.internal("Audio\\jump.mp3"));
 
         click = Gdx.audio.newMusic(Gdx.files.internal("Audio\\click.mp3"));
+        countdown = Gdx.audio.newMusic(Gdx.files.internal("Audio\\countdown.mp3"));
+        surfaceChange = Gdx.audio.newMusic(Gdx.files.internal("Audio\\surfaceChange.mp3"));
 
         SoundManager.click.setVolume(0.3f);
         SoundManager.jump.setVolume(0.3f);
+        SoundManager.countdown.setVolume(0.4f);
+        SoundManager.surfaceChange.setVolume(0.3f);
 
     }
 
@@ -63,6 +70,7 @@ public class SoundManager{
         blast.dispose();
         click.dispose();
         jump.dispose();
+        surfaceChange.dispose();
 
     }
 
