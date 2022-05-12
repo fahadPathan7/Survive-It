@@ -54,6 +54,7 @@ public class AboutScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 95) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
+                SoundManager.click.play();
                 game.setScreen(new GameMenuScreen(game,soundState));
             }
         }
@@ -92,6 +93,7 @@ public class AboutScreen implements Screen {
     public void dispose() {
 
         SoundManager.about.dispose();
+        SoundManager.click.dispose();
 
     }
 }

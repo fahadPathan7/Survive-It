@@ -77,7 +77,9 @@ public class HomeScreen implements Screen {
 
         SoundManager.create();
         SoundManager.home.setLooping(true);
-        SoundManager.home.setVolume(0.3f);                     // 50% of main volume
+        SoundManager.home.setVolume(0.3f);
+        SoundManager.click.setVolume(0.3f);
+
         if(soundState)SoundManager.home.play();
 
         createRunAnimation();
@@ -100,6 +102,7 @@ public class HomeScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 30+150) {
             if (Gdx.input.justTouched()) {
                 this.dispose();
+                SoundManager.click.play();
                 game.setScreen(new GameMenuScreen(game,soundState));;
             }
         }
@@ -180,6 +183,7 @@ public class HomeScreen implements Screen {
     public void dispose() {
 
         SoundManager.home.dispose();
+        SoundManager.click.dispose();
         playButton.dispose();
         mainBackground[0].dispose();
         mainBackground[1].dispose();

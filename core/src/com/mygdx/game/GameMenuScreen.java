@@ -56,7 +56,8 @@ public class GameMenuScreen implements Screen {
             if (Gdx.input.justTouched()) {
                 this.dispose();
                 //game.setScreen(new AirWaterScreen(game));
-                game.setScreen(new IntroScreen1(game,soundState));
+                SoundManager.click.play();
+                game.setScreen(new IntroScreen(game,soundState));
             }
         }
 
@@ -66,6 +67,7 @@ public class GameMenuScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 725) {
             if (Gdx.input.justTouched()) {
                 this.dispose();
+                SoundManager.click.play();
                 game.setScreen(new SettingScreen(game,soundState));
             }
         }
@@ -76,6 +78,7 @@ public class GameMenuScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 554) {
             if (Gdx.input.justTouched()) {
                 this.dispose();
+                SoundManager.click.play();
                 game.setScreen(new HighScoreScreen(game,soundState));
             }
         }
@@ -86,6 +89,7 @@ public class GameMenuScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 385) {
             if (Gdx.input.justTouched()) {
                 this.dispose();
+                SoundManager.click.play();
                 game.setScreen(new AboutScreen(game,soundState));
             }
         }
@@ -96,6 +100,7 @@ public class GameMenuScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 225) {
             if (Gdx.input.justTouched()) {
 
+                SoundManager.click.play();
                 System.exit(0);
             }
         }
@@ -133,6 +138,8 @@ public class GameMenuScreen implements Screen {
     public void dispose() {
 
         SoundManager.menu.dispose();
+        SoundManager.click.dispose();
         menuBackground.dispose();
+
     }
 }

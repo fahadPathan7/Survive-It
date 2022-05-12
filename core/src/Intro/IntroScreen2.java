@@ -53,6 +53,7 @@ public class IntroScreen2 implements Screen {
             if (Gdx.input.isTouched()) {
                 this.dispose();
                 SoundManager.intro.dispose();
+                SoundManager.click.play();
                 game.setScreen(new AirWaterScreen(game,soundState));
             }
         }
@@ -62,6 +63,7 @@ public class IntroScreen2 implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 558) {
             if (Gdx.input.justTouched()) {
                 this.dispose();
+                SoundManager.click.play();
                 game.setScreen(new IntroScreen3(game,soundState));
 
             }
@@ -72,6 +74,8 @@ public class IntroScreen2 implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 558) {
             if (Gdx.input.justTouched()) {
                 this.dispose();
+                SoundManager.click.play();
+                SoundManager.intro.dispose();
                 game.setScreen(new IntroScreen1(game,soundState));
             }
         }
@@ -109,6 +113,6 @@ public class IntroScreen2 implements Screen {
     @Override
     public void dispose() {
 
-
+        SoundManager.click.dispose();
     }
 }

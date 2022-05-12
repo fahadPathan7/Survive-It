@@ -50,7 +50,7 @@ public class SettingScreen implements Screen {
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 544
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 658) {
             if (Gdx.input.justTouched()) {
-
+                SoundManager.click.play();
                 if(!soundState)
                 {
                     soundState = true ;
@@ -64,6 +64,7 @@ public class SettingScreen implements Screen {
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 367
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 480) {
             if (Gdx.input.justTouched()) {
+                SoundManager.click.play();
                 if(soundState)
                 {
                     soundState = false;
@@ -79,6 +80,7 @@ public class SettingScreen implements Screen {
             if (Gdx.input.justTouched()) {
 
                 this.dispose();
+                SoundManager.click.play();
                 game.setScreen(new GameMenuScreen(game,soundState));
             }
         }
@@ -118,6 +120,7 @@ public class SettingScreen implements Screen {
     public void dispose() {
 
         SoundManager.setting.dispose();
+        SoundManager.click.dispose();
 
     }
 }

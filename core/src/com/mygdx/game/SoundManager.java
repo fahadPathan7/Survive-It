@@ -17,6 +17,12 @@ public class SoundManager{
 
     public static Music intro;
 
+    public static Music collisionWithEmeny;
+    public static Music blast;
+    public static Music jump;
+
+
+    public static Music click ;
 
     public static void create()
     {
@@ -32,6 +38,15 @@ public class SoundManager{
 
         intro = Gdx.audio.newMusic(Gdx.files.internal("Audio\\intro.mp3"));
 
+        collisionWithEmeny = Gdx.audio.newMusic(Gdx.files.internal("Audio\\collsiion1.mp3"));
+        blast = Gdx.audio.newMusic(Gdx.files.internal("Audio\\collsiion3.mp3"));
+        jump= Gdx.audio.newMusic(Gdx.files.internal("Audio\\jump.mp3"));
+
+        click = Gdx.audio.newMusic(Gdx.files.internal("Audio\\click.mp3"));
+
+        SoundManager.click.setVolume(0.3f);
+        SoundManager.jump.setVolume(0.3f);
+
     }
 
     public void dispose() {
@@ -44,6 +59,10 @@ public class SoundManager{
         highscore.dispose();
         end.dispose();
         intro.dispose();
+        collisionWithEmeny.dispose();
+        blast.dispose();
+        click.dispose();
+        jump.dispose();
 
     }
 

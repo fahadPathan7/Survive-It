@@ -150,6 +150,7 @@ public class EndScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 385) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
+                SoundManager.click.play();
                 game.setScreen(new AirWaterScreen(game,soundState));
             }
         }
@@ -158,6 +159,7 @@ public class EndScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 265) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
+                SoundManager.click.play();
                 game.setScreen(new GameMenuScreen(game,soundState));
             }
         }
@@ -193,6 +195,7 @@ public class EndScreen implements Screen {
     @Override
     public void dispose() {
         SoundManager.end.dispose();
+        SoundManager.click.dispose();
 
     }
 }

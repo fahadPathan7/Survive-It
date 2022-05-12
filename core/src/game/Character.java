@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.SoundManager;
 
 public class Character implements ForObject {
     Collision collision; // for tracking collision of character with other objects
@@ -122,6 +123,7 @@ public class Character implements ForObject {
                 jumpStateTime = 0f; // used to calculate how long the character is jumping. initially 0
                 jumpDelay = true; // true means until it finishes jump other actions will be frozen.
                 renderJumpAnimation(batch); // drawing jump animation
+                SoundManager.jump.play();
             }
             else if (characterY == 0) {
                 // if the character y-axis is 0, by default it will start running.

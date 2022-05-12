@@ -181,6 +181,9 @@ public class AirWaterScreen implements Screen {
         SoundManager.create();
         SoundManager.gameLevel3.setLooping(true);
         SoundManager.gameLevel3.setVolume(0.1f);
+        SoundManager.collisionWithEmeny.setVolume(0.05f);
+        SoundManager.blast.setVolume(0.4f);
+
         if(soundState)
         {
                  // 30% of main volume
@@ -266,6 +269,7 @@ public class AirWaterScreen implements Screen {
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= pauseIconY
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= pauseIconY+90) {
             if (Gdx.input.isTouched()) {
+                SoundManager.click.play();
                 status = true ;
             }
         }
@@ -308,6 +312,8 @@ public class AirWaterScreen implements Screen {
                 tempScore += collisionPoint;           // updating score
                 consecutiveKillsCnt = 0;
                 health -= healthDamage;               // health update
+
+                SoundManager.collisionWithEmeny.play();
 
                 // If health == 0 switch to end screen
                 if(health <= 0)
@@ -395,6 +401,8 @@ public class AirWaterScreen implements Screen {
                     blasts.add(new Blast(monster.monsterX, monster.monsterY));
 
                     tempScore += monsterHitPoint; // updating score
+                    SoundManager.blast.play();
+
                     consecutiveKillsCnt++;
                     if (consecutiveKillsCnt == consecutiveKillsToGetPoint) {
                         tempScore += consecutiveKillsPoint;
@@ -434,6 +442,7 @@ public class AirWaterScreen implements Screen {
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 705
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 788) {
             if (Gdx.input.isTouched()) {
+                SoundManager.click.play();
                 status = false ;
             }
         }
@@ -443,6 +452,7 @@ public class AirWaterScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 586 + 83) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
+                SoundManager.click.play();
                 game.setScreen(new AirWaterScreen(game,soundState));
             }
         }
@@ -452,6 +462,7 @@ public class AirWaterScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 478 + 83) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
+                SoundManager.click.play();
                 game.setScreen(new GameMenuScreen(game,soundState));
             }
         }
@@ -460,6 +471,7 @@ public class AirWaterScreen implements Screen {
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 365
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 365 + 83) {
             if (Gdx.input.isTouched()) {
+                SoundManager.click.play();
                 if(!soundState)
                 {
                     soundState = true ;
@@ -473,6 +485,7 @@ public class AirWaterScreen implements Screen {
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 250
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 250 + 83) {
             if (Gdx.input.isTouched()) {
+                SoundManager.click.play();
                 if(soundState)
                 {
                     soundState = false;
@@ -580,6 +593,12 @@ public class AirWaterScreen implements Screen {
     public void dispose() {
 
         SoundManager.gameLevel3.dispose();
+        SoundManager.blast.dispose();
+        SoundManager.collisionWithEmeny.dispose();
+        SoundManager.click.dispose();
+        SoundManager.jump.dispose();
+
+        mute.dispose();
 
         background.dispose();
         pause.dispose();
