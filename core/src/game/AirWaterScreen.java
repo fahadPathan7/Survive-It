@@ -66,10 +66,6 @@ public class AirWaterScreen implements Screen {
     public boolean status  ;
     // pause screen ends
 
-    // sound start
-    public boolean music = true;
-    // sound off
-
     // health bar start
     Texture[] healthBar = new Texture[4];
     public int state = 0 ;
@@ -82,8 +78,15 @@ public class AirWaterScreen implements Screen {
     GameTime gameTime; // declaring GameTime object
     // game time ends
 
+    // sound starts
+    Texture mute ;
+    public boolean soundState;
+    public boolean music;
+    public boolean showMute = false;
+    // sound ends
 
-    public AirWaterScreen(MyGdxGame game) {
+
+    public AirWaterScreen(MyGdxGame game,boolean soundState) {
         this.game = game;
 
         rand = new Random();
@@ -99,6 +102,8 @@ public class AirWaterScreen implements Screen {
         spells = new ArrayList<>(); // for storing Spell objects
 
         gameTime = new GameTime(); // creating GameTime object
+
+        this.soundState = soundState;
 
     }
 
@@ -123,7 +128,10 @@ public class AirWaterScreen implements Screen {
         healthBar[3] = new Texture("Healthbar\\red.png");
         // health bar ends
 
+        // sound starts
+        mute = new Texture("Audio\\mute.png") ;
         soundbar();
+        // sound ends
     }
 
     @Override
@@ -169,14 +177,18 @@ public class AirWaterScreen implements Screen {
     }
 
     public void soundbar(){
-        if(music)
+
+        SoundManager.create();
+        SoundManager.gameLevel3.setLooping(true);
+        SoundManager.gameLevel3.setVolume(0.1f);
+        if(soundState)
         {
-            SoundManager.create();
-            SoundManager.gameLevel3.setLooping(true);
-            SoundManager.gameLevel3.setVolume(0.3f);     // 30% of main volume
+                 // 30% of main volume
             SoundManager.gameLevel3.play();
+            showMute = false;
 
         }
+        else showMute = true;
     }
 
     public void updateCharacter() {
@@ -275,7 +287,7 @@ public class AirWaterScreen implements Screen {
             //System.out.println(totalScore.score);
             setScoreAndHighScore();
             this.dispose();
-            game.setScreen(new EndScreen(game));
+            game.setScreen(new EndScreen(game,soundState));
         }
     }
 
@@ -302,7 +314,7 @@ public class AirWaterScreen implements Screen {
                 {
                     setScoreAndHighScore();
                     this.dispose();
-                    game.setScreen(new EndScreen(game));
+                    game.setScreen(new EndScreen(game,soundState));
                 }
                 // Ends
 
@@ -413,6 +425,8 @@ public class AirWaterScreen implements Screen {
         renderHealthBar();
 
         renderGameTime();
+
+        renderMute();
     }
 
     public void showPauseMenu() {
@@ -429,7 +443,7 @@ public class AirWaterScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 586 + 83) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
-                game.setScreen(new AirWaterScreen(game));
+                game.setScreen(new AirWaterScreen(game,soundState));
             }
         }
 
@@ -438,15 +452,7 @@ public class AirWaterScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 478 + 83) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
-                game.setScreen(new GameMenuScreen(game));
-            }
-        }
-
-        if (Gdx.input.getX() >= 538 && Gdx.input.getX() <= 1023 &&
-                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 388
-                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 388 + 83) {
-            if (Gdx.input.isTouched()) {
-                music = true;
+                game.setScreen(new GameMenuScreen(game,soundState));
             }
         }
 
@@ -454,8 +460,12 @@ public class AirWaterScreen implements Screen {
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 365
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 365 + 83) {
             if (Gdx.input.isTouched()) {
-                SoundManager.gameLevel3.stop();
-                SoundManager.gameLevel3.play();
+                if(!soundState)
+                {
+                    soundState = true ;
+                    SoundManager.gameLevel3.play();
+                    showMute = false;
+                }
             }
         }
 
@@ -463,7 +473,12 @@ public class AirWaterScreen implements Screen {
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 250
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 250 + 83) {
             if (Gdx.input.isTouched()) {
-                SoundManager.gameLevel3.stop();
+                if(soundState)
+                {
+                    soundState = false;
+                    SoundManager.gameLevel3.stop();
+                    showMute = true;
+                }
             }
         }
 
@@ -510,7 +525,9 @@ public class AirWaterScreen implements Screen {
     }
 
     public void renderPause() {
+
         game.batch.draw(pause, pauseScreenX, pauseScreenY,pause.getWidth(), Gdx.graphics.getHeight());
+        if(showMute) game.batch.draw(mute, 1580, 830,100,100);
     }
 
     public void renderPauseIcon(){
@@ -528,6 +545,10 @@ public class AirWaterScreen implements Screen {
 
         game.batch.draw(healthBar[state],0,0,Gdx.graphics.getWidth() * health , healthBarHeight);
 
+    }
+
+    public void renderMute(){
+        if(showMute) game.batch.draw(mute, 1520, 890,50,50);
     }
 
     public void renderGameTime() {

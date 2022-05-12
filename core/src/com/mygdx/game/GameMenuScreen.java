@@ -15,21 +15,34 @@ public class GameMenuScreen implements Screen {
     int menuBackgroundY = 0;
     // backgrounds ends
 
-    public GameMenuScreen(MyGdxGame game) {
+    // sound starts
+    public boolean soundState;
+    public boolean showMute;
+    Texture mute ;
+    // sound ends
+
+    public GameMenuScreen(MyGdxGame game, boolean soundState) {
 
         this.game = game;
-
+        this.soundState = soundState;
     }
 
     @Override
     public void show() {
 
         menuBackground = new Texture("Background\\menu.png") ;
+        mute = new Texture("Audio\\mute.png") ;
 
         SoundManager.create();
         SoundManager.menu.setLooping(true);
-        SoundManager.menu.setVolume(0.4f);     // 50% of main volume
-        SoundManager.menu.play();
+        SoundManager.menu.setVolume(0.3f);
+
+        if(soundState)
+        {
+            SoundManager.menu.play();
+            showMute = false;
+        }
+        else showMute = true;
 
     }
 
@@ -40,10 +53,10 @@ public class GameMenuScreen implements Screen {
         if (Gdx.input.getX() >= 176 && Gdx.input.getX() <= 520 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 790
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 890) {
-            if (Gdx.input.isTouched()) {
+            if (Gdx.input.justTouched()) {
                 this.dispose();
                 //game.setScreen(new AirWaterScreen(game));
-                game.setScreen(new IntroScreen1(game));
+                game.setScreen(new IntroScreen1(game,soundState));
             }
         }
 
@@ -51,9 +64,9 @@ public class GameMenuScreen implements Screen {
         if (Gdx.input.getX() >= 176 && Gdx.input.getX() <= 520 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 625
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 725) {
-            if (Gdx.input.isTouched()) {
+            if (Gdx.input.justTouched()) {
                 this.dispose();
-                game.setScreen(new TutorialScreen(game));
+                game.setScreen(new SettingScreen(game,soundState));
             }
         }
 
@@ -61,9 +74,9 @@ public class GameMenuScreen implements Screen {
         if (Gdx.input.getX() >= 176 && Gdx.input.getX() <= 520 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 454
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 554) {
-            if (Gdx.input.isTouched()) {
+            if (Gdx.input.justTouched()) {
                 this.dispose();
-                game.setScreen(new HighScoreScreen(game));
+                game.setScreen(new HighScoreScreen(game,soundState));
             }
         }
 
@@ -71,9 +84,9 @@ public class GameMenuScreen implements Screen {
         if (Gdx.input.getX() >= 176 && Gdx.input.getX() <= 520 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 285
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 385) {
-            if (Gdx.input.isTouched()) {
+            if (Gdx.input.justTouched()) {
                 this.dispose();
-                game.setScreen(new AboutScreen(game));
+                game.setScreen(new AboutScreen(game,soundState));
             }
         }
 
@@ -81,7 +94,7 @@ public class GameMenuScreen implements Screen {
         if (Gdx.input.getX() >= 176 && Gdx.input.getX() <= 520 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 115
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 225) {
-            if (Gdx.input.isTouched()) {
+            if (Gdx.input.justTouched()) {
 
                 System.exit(0);
             }
@@ -90,7 +103,7 @@ public class GameMenuScreen implements Screen {
         game.batch.begin();
 
         game.batch.draw(menuBackground, menuBackgroundX, menuBackgroundY);
-        //game.batch.draw(gameName, gameNameX, gameNameY,TEXT_WIDTH, TEXT_HEIGHT);
+        if(showMute) game.batch.draw(mute, 1580, 830,100,100);
 
         game.batch.end();
 

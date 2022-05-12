@@ -5,30 +5,42 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import java.awt.*;
-
 public class AboutScreen implements Screen {
 
     MyGdxGame game;
 
     Texture image ;
 
-    public AboutScreen(MyGdxGame game) {
+    // sound starts
+    public boolean soundState;
+    public boolean showMute;
+    Texture mute ;
+    // sound ends
+
+    public AboutScreen(MyGdxGame game,boolean soundState) {
 
         this.game = game;
+        this.soundState = soundState;
 
-        image =  new Texture("About\\about.png") ;
 
     }
-
 
     @Override
     public void show() {
 
+        image =  new Texture("About\\about.png") ;
+        mute = new Texture("Audio\\mute.png") ;
+
         SoundManager.create();
         SoundManager.about.setLooping(true);
-        SoundManager.about.setVolume(0.3f);       // 50% of main volume
-        SoundManager.about.play();
+        SoundManager.about.setVolume(0.2f);       // 50% of main volume
+
+        if(soundState)
+        {
+            SoundManager.about.play();
+            showMute = false;
+        }
+        else showMute = true;
 
     }
 
@@ -42,13 +54,15 @@ public class AboutScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 95) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
-                game.setScreen(new GameMenuScreen(game));
+                game.setScreen(new GameMenuScreen(game,soundState));
             }
         }
 
         game.batch.begin();
 
         game.batch.draw(image, 0,0);
+
+        if(showMute) game.batch.draw(mute, 1580, 830,100,100);
 
         game.batch.end();
 

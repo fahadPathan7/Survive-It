@@ -22,20 +22,37 @@ public class EndScreen implements Screen {
     public boolean higestScore ;
     public int currentScore ;
 
-    public EndScreen(MyGdxGame game) {
+    // sound starts
+    public boolean soundState;
+    public boolean showMute;
+    Texture mute ;
+    // sound ends
+
+    public EndScreen(MyGdxGame game,boolean soundState) {
 
         this.game = game;
         totalScore = new Score(game.batch);
+        this.soundState = soundState;
 
-        endscreen1 = new Texture("EndScreen\\2.png");
-        endscreen2 = new Texture("EndScreen\\4.png");
+        SoundManager.create();
+        SoundManager.end.setLooping(true);
+        SoundManager.end.setVolume(0.4f);     // 50% of main volume
+        if(soundState)
+        {
+            SoundManager.end.play();
+            showMute = false;
+        }
+        else showMute = true;
 
-       // higestScore = true;
     }
 
 
     @Override
     public void show() {
+
+        endscreen1 = new Texture("EndScreen\\2.png");
+        endscreen2 = new Texture("EndScreen\\4.png");
+        mute = new Texture("Audio\\mute.png") ;
 
 
 
@@ -59,6 +76,7 @@ public class EndScreen implements Screen {
         if(!higestScore)game.batch.draw(endscreen1,0,0);
         else game.batch.draw(endscreen2,0,0);
 
+        if(showMute) game.batch.draw(mute, 1580, 830,100,100);
         totalScore.render(game.batch);
 
         game.batch.end();
@@ -132,7 +150,7 @@ public class EndScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 385) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
-                game.setScreen(new AirWaterScreen(game));
+                game.setScreen(new AirWaterScreen(game,soundState));
             }
         }
         if (Gdx.input.getX() >= 621 && Gdx.input.getX() <= 1105 &&
@@ -140,7 +158,7 @@ public class EndScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 265) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
-                game.setScreen(new GameMenuScreen(game));
+                game.setScreen(new GameMenuScreen(game,soundState));
             }
         }
         if (Gdx.input.getX() >= 621 && Gdx.input.getX() <= 1105 &&
@@ -174,6 +192,7 @@ public class EndScreen implements Screen {
 
     @Override
     public void dispose() {
+        SoundManager.end.dispose();
 
     }
 }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.SoundManager;
 import game.AirWaterScreen;
 
 
@@ -14,16 +15,31 @@ public class IntroScreen3 implements Screen {
     MyGdxGame game;
     Texture background3;
 
-    public IntroScreen3 (MyGdxGame game) {
+    // sound starts
+    public boolean soundState;
+    public boolean showMute;
+    Texture mute ;
+    // sound ends
+
+    public IntroScreen3(MyGdxGame game,boolean soundState) {
 
         this.game = game;
-        background3 = new Texture("Intro\\3.png");
-
+        this.soundState = soundState;
     }
+
 
 
     @Override
     public void show() {
+
+        background3 = new Texture("Intro\\3.png");
+        mute = new Texture("Audio\\mute.png") ;
+
+        if(soundState)
+        {
+            showMute = false;
+        }
+        else showMute = true;
 
     }
 
@@ -37,7 +53,8 @@ public class IntroScreen3 implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 117) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
-                game.setScreen(new AirWaterScreen(game));
+                SoundManager.intro.dispose();
+                game.setScreen(new AirWaterScreen(game,soundState));
             }
         }
 
@@ -46,7 +63,7 @@ public class IntroScreen3 implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 558) {
             if (Gdx.input.justTouched()) {
                 this.dispose();
-                game.setScreen(new IntroScreen4(game));
+                game.setScreen(new IntroScreen4(game,soundState));
 
             }
         }
@@ -56,7 +73,7 @@ public class IntroScreen3 implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 558) {
             if (Gdx.input.justTouched()) {
                 this.dispose();
-                game.setScreen(new IntroScreen2(game));
+                game.setScreen(new IntroScreen2(game,soundState));
             }
         }
 
@@ -65,6 +82,7 @@ public class IntroScreen3 implements Screen {
         game.batch.begin();
 
         game.batch.draw(background3,0,0);
+        if(showMute) game.batch.draw(mute, 1580, 830,100,100);
 
         game.batch.end();
 

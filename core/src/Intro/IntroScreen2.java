@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.SoundManager;
 import game.AirWaterScreen;
 
 
@@ -15,17 +16,30 @@ public class IntroScreen2 implements Screen {
     MyGdxGame game;
     Texture background2;
 
-    public IntroScreen2 (MyGdxGame game) {
+    // sound starts
+    public boolean soundState;
+    public boolean showMute;
+    Texture mute ;
+    // sound ends
+
+    public IntroScreen2(MyGdxGame game,boolean soundState) {
 
         this.game = game;
-        background2 = new Texture("Intro\\2.png");
-
+        this.soundState = soundState;
     }
 
 
     @Override
     public void show() {
 
+        background2 = new Texture("Intro\\2.png");
+        mute = new Texture("Audio\\mute.png") ;
+
+        if(soundState)
+        {
+            showMute = false;
+        }
+        else showMute = true;
     }
 
     @Override
@@ -38,7 +52,8 @@ public class IntroScreen2 implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 117) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
-                game.setScreen(new AirWaterScreen(game));
+                SoundManager.intro.dispose();
+                game.setScreen(new AirWaterScreen(game,soundState));
             }
         }
 
@@ -47,7 +62,7 @@ public class IntroScreen2 implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 558) {
             if (Gdx.input.justTouched()) {
                 this.dispose();
-                game.setScreen(new IntroScreen3(game));
+                game.setScreen(new IntroScreen3(game,soundState));
 
             }
         }
@@ -57,13 +72,14 @@ public class IntroScreen2 implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 558) {
             if (Gdx.input.justTouched()) {
                 this.dispose();
-                game.setScreen(new IntroScreen1(game));
+                game.setScreen(new IntroScreen1(game,soundState));
             }
         }
 
         game.batch.begin();
 
         game.batch.draw(background2,0,0);
+        if(showMute) game.batch.draw(mute, 1580, 830,100,100);
 
         game.batch.end();
 

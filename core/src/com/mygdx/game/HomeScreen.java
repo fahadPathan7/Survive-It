@@ -46,12 +46,20 @@ public class HomeScreen implements Screen {
     public float runFrameDuration = 0.075f; // frame duration of every texture
     // run animation ends
 
+    // sound running starts
+    public boolean soundState = true;
+    // sound running ends
+
+
 
     public HomeScreen(MyGdxGame game) {
-
         this.game = game;
-
     }
+//    public HomeScreen(MyGdxGame game, boolean soundState) {
+//
+//        this.game = game;
+//        this.soundState = soundState;
+//    }
 
     @Override
     public void show() {
@@ -69,8 +77,8 @@ public class HomeScreen implements Screen {
 
         SoundManager.create();
         SoundManager.home.setLooping(true);
-        SoundManager.home.setVolume(0.3f);     // 50% of main volume
-        SoundManager.home.play();
+        SoundManager.home.setVolume(0.3f);                     // 50% of main volume
+        if(soundState)SoundManager.home.play();
 
         createRunAnimation();
 
@@ -90,9 +98,9 @@ public class HomeScreen implements Screen {
         if (Gdx.input.getX() >= 1500 && Gdx.input.getX() <= 1500+150 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 30
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 30+150) {
-            if (Gdx.input.isTouched()) {
+            if (Gdx.input.justTouched()) {
                 this.dispose();
-                game.setScreen(new GameMenuScreen(game));;
+                game.setScreen(new GameMenuScreen(game,soundState));;
             }
         }
 

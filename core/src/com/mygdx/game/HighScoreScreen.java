@@ -18,17 +18,37 @@ public class HighScoreScreen implements Screen {
 
     Texture background;
 
+    // sound starts
+    public boolean soundState;
+    public boolean showMute;
+    Texture mute ;
+    // sound ends
 
-    public HighScoreScreen(MyGdxGame game) {
+
+    public HighScoreScreen(MyGdxGame game,boolean soundState) {
 
         this.game = game;
         totalScore = new Score(game.batch);
+        this.soundState = soundState;
 
-        background = new Texture("Background\\show.png");
 
     }
     @Override
     public void show() {
+
+        background = new Texture("Background\\show.png");
+        mute = new Texture("Audio\\mute.png") ;
+
+
+        SoundManager.create();
+        SoundManager.highscore.setLooping(true);
+        SoundManager.highscore.setVolume(0.2f);     // 50% of main volume
+        if(soundState)
+        {
+            SoundManager.highscore.play();
+            showMute = false;
+        }
+        else showMute = true;
 
     }
 
@@ -46,6 +66,7 @@ public class HighScoreScreen implements Screen {
         game.batch.begin();
 
         game.batch.draw(background,0,0);
+        if(showMute) game.batch.draw(mute, 1580, 830,100,100);
         totalScore.render(game.batch);
 
         game.batch.end();
@@ -56,16 +77,16 @@ public class HighScoreScreen implements Screen {
         if (Gdx.input.getX() >= 615 && Gdx.input.getX() <= 1095 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 225
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 310) {
-            if (Gdx.input.isTouched()) {
+            if (Gdx.input.justTouched()) {
                 this.dispose();
-                game.setScreen(new GameMenuScreen(game));
+                game.setScreen(new GameMenuScreen(game,soundState));
             }
         }
 
         if (Gdx.input.getX() >= 615 && Gdx.input.getX() <= 1095 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 120
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 120+85) {
-            if (Gdx.input.isTouched()) {
+            if (Gdx.input.justTouched()) {
 
                 File file = new File("highestScore.txt");
                 file.delete();
@@ -76,7 +97,7 @@ public class HighScoreScreen implements Screen {
         if (Gdx.input.getX() >= 615 && Gdx.input.getX() <= 1095 &&
                 MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 20
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 20+85) {
-            if (Gdx.input.isTouched()) {
+            if (Gdx.input.justTouched()) {
                 System.exit(0);
             }
         }
@@ -136,6 +157,7 @@ public class HighScoreScreen implements Screen {
 
     @Override
     public void dispose() {
+        SoundManager.highscore.dispose();
 
     }
 }

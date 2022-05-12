@@ -11,6 +11,11 @@ public class SoundManager{
 
     public static Music menu;
     public static Music about;
+    public static Music setting;
+    public static Music highscore;
+    public static Music end;
+
+    public static Music intro;
 
 
     public static void create()
@@ -21,6 +26,11 @@ public class SoundManager{
 
         menu = Gdx.audio.newMusic(Gdx.files.internal("Audio\\menu.mp3"));
         about = Gdx.audio.newMusic(Gdx.files.internal("Audio\\about.mp3"));
+        setting = Gdx.audio.newMusic(Gdx.files.internal("Audio\\setting.mp3"));
+        highscore = Gdx.audio.newMusic(Gdx.files.internal("Audio\\highscore.mp3"));
+        end = Gdx.audio.newMusic(Gdx.files.internal("Audio\\end.mp3"));
+
+        intro = Gdx.audio.newMusic(Gdx.files.internal("Audio\\intro.mp3"));
 
     }
 
@@ -30,6 +40,10 @@ public class SoundManager{
         gameLevel3.dispose();
         menu.dispose();
         about.dispose();
+        setting.dispose();
+        highscore.dispose();
+        end.dispose();
+        intro.dispose();
 
     }
 

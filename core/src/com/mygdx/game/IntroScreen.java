@@ -13,10 +13,14 @@ public class IntroScreen implements Screen {
     Texture[] background = new Texture[6];
     int state = 0;
 
-    public IntroScreen(MyGdxGame game) {
+    // sound starts
+    public boolean soundState;
+    // sound ends
+
+    public IntroScreen(MyGdxGame game,boolean soundState) {
 
         this.game = game;
-
+        this.soundState = soundState;
     }
 
     @Override
@@ -41,7 +45,7 @@ public class IntroScreen implements Screen {
                 && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 117) {
             if (Gdx.input.isTouched()) {
                 this.dispose();
-                game.setScreen(new AirWaterScreen(game));
+                game.setScreen(new AirWaterScreen(game,soundState));
             }
         }
 

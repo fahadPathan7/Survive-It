@@ -14,9 +14,14 @@ public class PauseScreen implements Screen {
     Texture mainBackground;
     int mainBackgroundX ,mainBackgroundY;
 
-    public PauseScreen(MyGdxGame game) {
+    // sound starts
+    public boolean soundState;
+    // sound ends
+
+    public PauseScreen(MyGdxGame game,boolean soundState) {
 
         this.game = game;
+        this.soundState = soundState;
 
         mainBackgroundX = 0;
         mainBackgroundY = 0;
@@ -35,7 +40,7 @@ public class PauseScreen implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             this.dispose();
-            game.setScreen(new AirWaterScreen(game));
+            game.setScreen(new AirWaterScreen(game,soundState));
 
         }
 
