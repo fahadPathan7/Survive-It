@@ -49,6 +49,11 @@ public class EndScreen implements Screen {
         }
         else showMute = true;
 
+
+        System.out.println(AirWaterScreen.totalSpellCnt);
+        System.out.println(AirWaterScreen.totalSpellMissCnt);
+        System.out.println(AirWaterScreen.totalMonsterHitCnt);
+        System.out.println(AirWaterScreen.totalMonsterMissCnt);
     }
 
 

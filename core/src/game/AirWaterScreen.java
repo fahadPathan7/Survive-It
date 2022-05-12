@@ -87,6 +87,14 @@ public class AirWaterScreen implements Screen {
     // sound ends
 
 
+    // stat starts
+    public static int totalSpellCnt = 0; // total number of spells character shoot.
+    public static int totalSpellMissCnt = 0; // total number of spells missed. (didn't hit any monster)
+    public static int totalMonsterHitCnt = 0; // total number of monsters got hit by spells.
+    public static int totalMonsterMissCnt = 0; // total number of monsters didn't get hit by spells.
+    // stat ends
+
+
     public AirWaterScreen(MyGdxGame game,boolean soundState) {
         this.game = game;
 
@@ -214,6 +222,9 @@ public class AirWaterScreen implements Screen {
                 monsterToRemove.add(monster);
 
                 tempScore += monsterMissPoint; // updating score
+
+                totalMonsterMissCnt++;
+
                 consecutiveKillsCnt = 0;
             }
         }
@@ -226,6 +237,8 @@ public class AirWaterScreen implements Screen {
             spells.add(new Spell(character.characterX, character.characterY, character.characterWidth,
                     character.characterHeight, character.inWater));
             spellStateTime = 0f;
+
+            totalSpellCnt++;
         }
 
         ArrayList<Spell> spellToRemove = new ArrayList<>();
@@ -235,7 +248,10 @@ public class AirWaterScreen implements Screen {
                 spellToRemove.add(spell);
 
                 tempScore += spellMissPoint; // updating score
+
                 consecutiveKillsCnt = 0;
+
+                totalSpellMissCnt++;
             }
         }
         spells.removeAll(spellToRemove);
@@ -311,8 +327,12 @@ public class AirWaterScreen implements Screen {
                 blasts.add(new Blast(monster.monsterX, monster.monsterY));
 
                 tempScore += collisionPoint;           // updating score
+
                 consecutiveKillsCnt = 0;
+
                 health -= healthDamage;               // health update
+
+                totalMonsterMissCnt++;
 
                 SoundManager.collisionWithEmeny.dispose();
                 SoundManager.collisionWithEmeny.play();
@@ -403,6 +423,8 @@ public class AirWaterScreen implements Screen {
                     blasts.add(new Blast(monster.monsterX, monster.monsterY));
 
                     tempScore += monsterHitPoint; // updating score
+
+                    totalMonsterHitCnt++;
 
                     SoundManager.blast.dispose();
                     SoundManager.blast.play();
