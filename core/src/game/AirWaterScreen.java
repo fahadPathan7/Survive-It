@@ -291,7 +291,7 @@ public class AirWaterScreen implements Screen {
             //System.out.println(totalScore.score);
             setScoreAndHighScore();
             this.dispose();
-            game.setScreen(new EndScreen(game,soundState));
+            game.setScreen(new EndScreen(game,soundState,2));
         }
     }
 
@@ -321,7 +321,7 @@ public class AirWaterScreen implements Screen {
                 {
                     setScoreAndHighScore();
                     this.dispose();
-                    game.setScreen(new EndScreen(game,soundState));
+                    game.setScreen(new EndScreen(game,soundState,1));
                 }
                 // Ends
 

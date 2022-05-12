@@ -18,6 +18,8 @@ public class EndScreen implements Screen {
 
     Texture endscreen1 ;
     Texture endscreen2 ;
+    Texture endscreen3 ;
+    Texture endscreen4 ;
 
     public boolean higestScore ;
     public int currentScore ;
@@ -28,11 +30,14 @@ public class EndScreen implements Screen {
     Texture mute ;
     // sound ends
 
-    public EndScreen(MyGdxGame game,boolean soundState) {
+    public int status;
+
+    public EndScreen(MyGdxGame game,boolean soundState,int status) {
 
         this.game = game;
         totalScore = new Score(game.batch);
         this.soundState = soundState;
+        this.status = status;
 
         SoundManager.create();
         SoundManager.end.setLooping(true);
@@ -52,9 +57,9 @@ public class EndScreen implements Screen {
 
         endscreen1 = new Texture("EndScreen\\2.png");
         endscreen2 = new Texture("EndScreen\\4.png");
+        endscreen3 = new Texture("EndScreen\\1.png");
+        endscreen4 = new Texture("EndScreen\\3.png");
         mute = new Texture("Audio\\mute.png") ;
-
-
 
     }
 
@@ -71,10 +76,20 @@ public class EndScreen implements Screen {
         getScore();
         compareScore();
 
+        //System.out.println(status);
+
         game.batch.begin();
 
-        if(!higestScore)game.batch.draw(endscreen1,0,0);
-        else game.batch.draw(endscreen2,0,0);
+        if(!higestScore)
+        {
+            if(status==1) game.batch.draw(endscreen1,0,0);
+            else game.batch.draw(endscreen3,0,0);
+        }
+        else
+        {
+            if(status==1) game.batch.draw(endscreen2,0,0);
+            else game.batch.draw(endscreen4,0,0);
+        }
 
         if(showMute) game.batch.draw(mute, 1580, 830,100,100);
         totalScore.render(game.batch);
@@ -194,8 +209,14 @@ public class EndScreen implements Screen {
 
     @Override
     public void dispose() {
+
         SoundManager.end.dispose();
         SoundManager.click.dispose();
+
+        endscreen3.dispose();
+        endscreen2.dispose();
+        endscreen1.dispose();
+        endscreen4.dispose();
 
     }
 }
