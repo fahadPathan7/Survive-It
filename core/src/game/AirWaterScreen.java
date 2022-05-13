@@ -93,6 +93,7 @@ public class AirWaterScreen implements Screen {
     public static int totalSpellMissCnt = 0; // total number of spells missed. (didn't hit any monster)
     public static int totalMonsterHitCnt = 0; // total number of monsters got hit by spells.
     public static int totalMonsterMissCnt = 0; // total number of monsters didn't get hit by spells.
+    public static int totalConsecutiveKillsCnt = 0; // no of consecutive five kills
     // stat ends
 
 
@@ -118,6 +119,7 @@ public class AirWaterScreen implements Screen {
         totalSpellMissCnt = 0;
         totalMonsterHitCnt = 0;
         totalMonsterMissCnt = 0;
+        totalConsecutiveKillsCnt = 0;
 
         Monster.monsterVerticalSpeed = 50f;
         Monster.monsterHorizontalSpeed = 230f;
@@ -440,6 +442,7 @@ public class AirWaterScreen implements Screen {
 
                     consecutiveKillsCnt++;
                     if (consecutiveKillsCnt == consecutiveKillsToGetPoint) {
+                        totalConsecutiveKillsCnt++; // no of consecutive 5 kills.
                         tempScore += consecutiveKillsPoint;
                         consecutiveKillsCnt = 0;
                     }
