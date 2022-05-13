@@ -1,9 +1,6 @@
 package com.mygdx.game;
 
-import Intro.IntroScreen1;
-import Intro.IntroScreen3;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import game.AirWaterScreen;
@@ -12,7 +9,7 @@ public class IntroScreen implements Screen {
 
     MyGdxGame game;
 
-    Texture[] background = new Texture[6];
+    Texture[] background = new Texture[7];
     int state = 0;
 
     // sound starts
@@ -35,7 +32,8 @@ public class IntroScreen implements Screen {
         background[2] = new Texture("Intro\\3.png");
         background[3] = new Texture("Intro\\4.png");
         background[4] = new Texture("Intro\\5.png");
-        background[5] = new Texture("Intro\\6.png");
+        background[5] = new Texture("Intro\\7.png");
+        background[6] = new Texture("Intro\\6.png");
 
         mute = new Texture("Audio\\mute.png") ;
 
@@ -66,7 +64,7 @@ public class IntroScreen implements Screen {
             }
         }
 
-        if(state == 5)
+        if(state == 6)
         {
             if (Gdx.input.getX() >= 1544 && Gdx.input.getX() <= 1666 &&
                     MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 423
@@ -85,7 +83,7 @@ public class IntroScreen implements Screen {
             if (Gdx.input.justTouched()) {
 
                 state++;
-                if(state == 6) state = 5;
+                if(state == 7) state = 6;
                  SoundManager.click.play();
 
             }
@@ -147,6 +145,7 @@ public class IntroScreen implements Screen {
         background[3].dispose();
         background[4].dispose();
         background[5].dispose();
+        background[6].dispose();
 
     }
 }
