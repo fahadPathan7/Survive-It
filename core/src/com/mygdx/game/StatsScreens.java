@@ -17,6 +17,7 @@ public class StatsScreens implements Screen {
     Score monsterSpellUsed ;
     Score monsterSpellMiss ;
     Score monsterSpellOnScreen ;
+    Score monsterContinousKills;
 
     Texture statsScreen ;
 
@@ -39,6 +40,7 @@ public class StatsScreens implements Screen {
         monsterSpellUsed = new Score(game.batch);
         monsterSpellMiss = new Score(game.batch);
         monsterSpellOnScreen = new Score(game.batch);
+        monsterContinousKills = new Score(game.batch);
 
         SoundManager.create();
         SoundManager.end.setLooping(true);
@@ -49,11 +51,6 @@ public class StatsScreens implements Screen {
             showMute = false;
         }
         else showMute = true;
-
-        System.out.println(AirWaterScreen.totalSpellCnt);
-        System.out.println(AirWaterScreen.totalSpellMissCnt);
-        System.out.println(AirWaterScreen.totalMonsterHitCnt);
-        System.out.println(AirWaterScreen.totalMonsterMissCnt);
     }
 
 
@@ -83,6 +80,10 @@ public class StatsScreens implements Screen {
         monsterSpellOnScreen.plusWeight = 500;
         monsterSpellOnScreen.score = AirWaterScreen.totalSpellCnt - AirWaterScreen.totalSpellMissCnt- AirWaterScreen.totalMonsterHitCnt;
 
+        monsterContinousKills.digitY = 100+27 ;
+        monsterContinousKills.plusWeight = 500;
+        monsterContinousKills.score = AirWaterScreen.totalConsecutiveKillsCnt;
+
     }
 
     @Override
@@ -100,7 +101,7 @@ public class StatsScreens implements Screen {
         monsterSpellUsed.render(game.batch);
         monsterSpellMiss.render(game.batch);
         monsterSpellOnScreen.render(game.batch);
-
+        monsterContinousKills.render(game.batch);
 
         game.batch.end();
 
@@ -109,9 +110,9 @@ public class StatsScreens implements Screen {
     public void button()
     {
 
-        if (Gdx.input.getX() >= 77 && Gdx.input.getX() <= 520 &&
-                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 25
-                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 108) {
+        if (Gdx.input.getX() >= 27 && Gdx.input.getX() <= 271 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 23
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 82) {
             if (Gdx.input.justTouched()) {
                 this.dispose();
                 SoundManager.click.play();
