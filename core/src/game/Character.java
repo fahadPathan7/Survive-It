@@ -9,8 +9,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.SoundManager;
 
+
+/*
+this class is used for,
+1. creating and drawing character run, jump and fly animation.
+2. controlling character position (how far it can go in water and air)
+3. controlling character movement. (how it will move in air and water).
+4. doing actions according to user input. (jump, fly).
+ */
 public class Character implements ForObject {
     Collision collision; // for tracking collision of character with other objects
+
 
     // character variables starts
     public float characterX = 50f; // x-axis of character
@@ -21,12 +30,13 @@ public class Character implements ForObject {
     public float characterHeight = 140; // character height is always same
     // character variable ends
 
+
     // water, air divider starts
     public boolean inWater = true; // is the character in water or not? (initially in water)
     public boolean inAir = false; // is the character in air or not?
     public float waterMinDistance = 10f; // the minimum distance the character can go when in water
     public float waterMaxDistance = Gdx.graphics.getHeight() / 2f - characterHeight; // the maximum distance the character
-    // can go when in water.
+        // can go when in water.
     public float airMinDistance = Gdx.graphics.getHeight() / 2f; // the minimum distance the character can go when in water.
     public float characterSafeDistanceInAirFromMaxHeight = 60f;
     public float airMaxDistance = Gdx.graphics.getHeight() - characterHeight - characterSafeDistanceInAirFromMaxHeight; // the
@@ -34,6 +44,7 @@ public class Character implements ForObject {
     public float safeDistanceFromAir = 6f; // to avoid unwanted collision with air objects
     public float safeDistanceFromWater = 6f; // to avoid unwanted collision with water objects
     // water, air divider ends
+
 
     // run animation starts
     float runStateTime = 0f; // to calculate state time for running animation
@@ -43,6 +54,7 @@ public class Character implements ForObject {
     public float runFrameDuration = 0.075f; // frame duration of every texture
     // run animation ends
 
+
     // fly animation starts
     float flyStateTime = 0f; // to calculate state time for fly animation
     Animation flyAnimation; // for creating fly animation
@@ -51,6 +63,7 @@ public class Character implements ForObject {
     public float flyFrameDuration = 0.2f; // frame duration for every fly image
     public float characterFlySpeed = 250; // character up and down speed when flying (fps)
     // fly animation ends
+
 
     // jump animation starts
     public float jumpStateTime; // to calculate state time
@@ -71,7 +84,7 @@ public class Character implements ForObject {
     default constructor.
      */
     public Character() {
-        characterY = waterMinDistance;
+        characterY = waterMinDistance; // initially character is in water
 
         collision = new Collision(characterX, characterY, characterWidth, characterHeight); // creating object of
             // collision class to check for collision with objects.
@@ -85,6 +98,7 @@ public class Character implements ForObject {
         // creating jump animation
         createJumpAnimation();
     }
+
 
     /*
     this method is used to update character position and different characteristics.
@@ -103,6 +117,7 @@ public class Character implements ForObject {
         // updating collision
         collision.update(characterX, characterY, characterWidth, characterHeight);
     }
+
 
     /*
     this method is used to render the character from desired class.
@@ -141,6 +156,7 @@ public class Character implements ForObject {
         }
     }
 
+
     /*
     the method will be called to check if there is any collision of character with any other objects.
      */
@@ -148,6 +164,7 @@ public class Character implements ForObject {
     public Collision getCollision() {
         return collision; // it will return an object of collision objects. which has information about character.
     }
+
 
     /*
     the method will get user input and will teleport character in water or air according to command.
@@ -180,6 +197,7 @@ public class Character implements ForObject {
         }
     }
 
+
     /*
     this method is used get user input. and do action according to command. it will shift the character up or down
     according to command.
@@ -198,6 +216,7 @@ public class Character implements ForObject {
             characterY -= characterFlySpeed * Gdx.graphics.getDeltaTime(); // changing y-axis
         }
     }
+
 
     /*
     this method is used to make sure the character is within its range both in air and water.
@@ -219,6 +238,7 @@ public class Character implements ForObject {
         }
     }
 
+
     /*
     this method is used to create run animation.
      */
@@ -233,6 +253,7 @@ public class Character implements ForObject {
         runStateTime = 0f; // setting state time 0
     }
 
+
     /*
     to draw run animation
      */
@@ -244,6 +265,7 @@ public class Character implements ForObject {
         batch.draw(runReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
                 characterWidth,characterHeight,1,1,0); // drawing run animation
     }
+
 
     /*
     to create fly animation
@@ -259,6 +281,7 @@ public class Character implements ForObject {
         flyStateTime = 0f; // setting state time 0
     }
 
+
     /*
     to draw fly animation
      */
@@ -270,6 +293,7 @@ public class Character implements ForObject {
         batch.draw(flyReg, characterX, characterY, characterWidth / 2, characterHeight / 2,
                 characterWidth,characterHeight,1,1,0); // drawing fly animation
     }
+
 
     /*
     to create jump animation
@@ -284,6 +308,7 @@ public class Character implements ForObject {
         jumpAnimation = new Animation<>(jumpFrameDuration, textureRegion); // creating animation
         jumpStateTime = 0f; // setting state time 0
     }
+
 
     /*
     to draw jump animation

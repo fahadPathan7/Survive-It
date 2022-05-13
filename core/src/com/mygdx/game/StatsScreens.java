@@ -3,7 +3,6 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.ScreenUtils;
 import game.AirWaterScreen;
 import game.Score;
 
@@ -35,12 +34,12 @@ public class StatsScreens implements Screen {
         this.soundState = soundState;
         this.status = status;
 
-        monsterKills = new Score(game.batch);
-        monsterFails = new Score(game.batch);
-        monsterSpellUsed = new Score(game.batch);
-        monsterSpellMiss = new Score(game.batch);
-        monsterSpellOnScreen = new Score(game.batch);
-        monsterContinousKills = new Score(game.batch);
+        monsterKills = new Score();
+        monsterFails = new Score();
+        monsterSpellUsed = new Score();
+        monsterSpellMiss = new Score();
+        monsterSpellOnScreen = new Score();
+        monsterContinousKills = new Score();
 
         SoundManager.create();
         SoundManager.end.setLooping(true);
@@ -61,27 +60,27 @@ public class StatsScreens implements Screen {
        mute = new Texture("Audio\\mute.png") ;
 
         monsterKills.digitY = 680 ;
-        monsterKills.plusWeight = 500;
+        monsterKills.extraXAxis = 500;
         monsterKills.score = AirWaterScreen.totalMonsterHitCnt;
 
         monsterFails.digitY = 560+10 ;
-        monsterFails.plusWeight = 500;
+        monsterFails.extraXAxis = 500;
         monsterFails.score = AirWaterScreen.totalMonsterMissCnt;
 
         monsterSpellUsed.digitY = 440+19 ;
-        monsterSpellUsed.plusWeight = 500;
+        monsterSpellUsed.extraXAxis = 500;
         monsterSpellUsed.score = AirWaterScreen.totalSpellCnt;
 
         monsterSpellMiss.digitY = 320+15 ;
-        monsterSpellMiss.plusWeight = 500;
+        monsterSpellMiss.extraXAxis = 500;
         monsterSpellMiss.score = AirWaterScreen.totalSpellMissCnt;
 
         monsterSpellOnScreen.digitY = 200+27 ;
-        monsterSpellOnScreen.plusWeight = 500;
+        monsterSpellOnScreen.extraXAxis = 500;
         monsterSpellOnScreen.score = AirWaterScreen.totalSpellCnt - AirWaterScreen.totalSpellMissCnt- AirWaterScreen.totalMonsterHitCnt;
 
         monsterContinousKills.digitY = 100+27 ;
-        monsterContinousKills.plusWeight = 500;
+        monsterContinousKills.extraXAxis = 500;
         monsterContinousKills.score = AirWaterScreen.totalConsecutiveKillsCnt;
 
     }

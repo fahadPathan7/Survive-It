@@ -106,7 +106,7 @@ public class AirWaterScreen implements Screen {
 
         character = new Character(); // creating character object
 
-        totalScore = new Score(game.batch); // creating score object
+        totalScore = new Score(); // creating score object
 
         monsters = new ArrayList<>(); // for storing Monster objects
 

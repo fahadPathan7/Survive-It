@@ -7,7 +7,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import game.Score;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -28,7 +27,7 @@ public class HighScoreScreen implements Screen {
     public HighScoreScreen(MyGdxGame game,boolean soundState) {
 
         this.game = game;
-        totalScore = new Score(game.batch);
+        totalScore = new Score();
         this.soundState = soundState;
 
 
@@ -58,7 +57,7 @@ public class HighScoreScreen implements Screen {
 
         // * set position
         totalScore.score = 0 ;
-        totalScore.minusHeight = 470 ;
+        totalScore.extraYAxis = 470 ;
 
         buttonWork();
         getScore();
