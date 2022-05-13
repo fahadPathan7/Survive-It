@@ -102,7 +102,6 @@ public class EndScreen implements Screen {
 
     }
 
-
     public void getScore() {
         File file1 = new File("score.txt");
 
