@@ -35,7 +35,7 @@ public class EndScreen implements Screen {
     public EndScreen(MyGdxGame game,boolean soundState,int status) {
 
         this.game = game;
-        totalScore = new Score(game.batch);
+        totalScore = new Score();
         this.soundState = soundState;
         this.status = status;
 
@@ -70,7 +70,7 @@ public class EndScreen implements Screen {
 
         // * set position
         //totalScore.score = 0 ;
-        totalScore.minusHeight = 470 ;
+        totalScore.extraYAxis = 470 ;
 
         button();
         getScore();
