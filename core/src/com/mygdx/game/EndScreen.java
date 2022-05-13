@@ -66,6 +66,8 @@ public class EndScreen implements Screen {
         endscreen4 = new Texture("EndScreen\\3.png");
         mute = new Texture("Audio\\mute.png") ;
 
+
+
     }
 
     @Override
@@ -165,27 +167,37 @@ public class EndScreen implements Screen {
 
     public void button()
     {
-        if (Gdx.input.getX() >= 621 && Gdx.input.getX() <= 1105 &&
-                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 300
-                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 385) {
-            if (Gdx.input.isTouched()) {
+
+        if (Gdx.input.getX() >= 644 && Gdx.input.getX() <= 1080 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 303
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 303+78) {
+            if (Gdx.input.justTouched()) {
                 this.dispose();
                 SoundManager.click.play();
                 game.setScreen(new AirWaterScreen(game,soundState));
             }
         }
-        if (Gdx.input.getX() >= 621 && Gdx.input.getX() <= 1105 &&
-                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 180
-                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 265) {
-            if (Gdx.input.isTouched()) {
+        if (Gdx.input.getX() >= 644 && Gdx.input.getX() <= 1080 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 215
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 215+78) {
+            if (Gdx.input.justTouched()) {
+                this.dispose();
+                SoundManager.click.play();
+                game.setScreen(new AirWaterScreen(game,soundState));
+            }
+        }
+        if (Gdx.input.getX() >= 644 && Gdx.input.getX() <= 1080 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 128
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 128+78) {
+            if (Gdx.input.justTouched()) {
                 this.dispose();
                 SoundManager.click.play();
                 game.setScreen(new GameMenuScreen(game,soundState));
             }
         }
-        if (Gdx.input.getX() >= 621 && Gdx.input.getX() <= 1105 &&
-                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 65
-                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 150) {
+        if (Gdx.input.getX() >= 644 && Gdx.input.getX() <= 1080 &&
+                MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() >= 36
+                && MyGdxGame.SCREEN_HEIGHT - Gdx.input.getY() <= 36+78) {
             if (Gdx.input.isTouched()) {
                 System.exit(0);
             }

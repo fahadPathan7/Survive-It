@@ -97,6 +97,7 @@ public class AirWaterScreen implements Screen {
 
     public AirWaterScreen(MyGdxGame game,boolean soundState) {
         this.game = game;
+        this.soundState = soundState;
 
         rand = new Random();
 
@@ -112,8 +113,10 @@ public class AirWaterScreen implements Screen {
 
         gameTime = new GameTime(); // creating GameTime object
 
-        this.soundState = soundState;
-
+        totalSpellCnt = 0;
+        totalSpellMissCnt = 0;
+        totalMonsterHitCnt = 0;
+        totalMonsterMissCnt = 0;
     }
 
     @Override
