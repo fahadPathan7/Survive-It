@@ -49,11 +49,6 @@ public class EndScreen implements Screen {
         }
         else showMute = true;
 
-
-        System.out.println(AirWaterScreen.totalSpellCnt);
-        System.out.println(AirWaterScreen.totalSpellMissCnt);
-        System.out.println(AirWaterScreen.totalMonsterHitCnt);
-        System.out.println(AirWaterScreen.totalMonsterMissCnt);
     }
 
 
@@ -65,8 +60,6 @@ public class EndScreen implements Screen {
         endscreen3 = new Texture("EndScreen\\1.png");
         endscreen4 = new Texture("EndScreen\\3.png");
         mute = new Texture("Audio\\mute.png") ;
-
-
 
     }
 
@@ -174,7 +167,7 @@ public class EndScreen implements Screen {
             if (Gdx.input.justTouched()) {
                 this.dispose();
                 SoundManager.click.play();
-                game.setScreen(new AirWaterScreen(game,soundState));
+                game.setScreen(new StatsScreens(game,soundState,status));
             }
         }
         if (Gdx.input.getX() >= 644 && Gdx.input.getX() <= 1080 &&

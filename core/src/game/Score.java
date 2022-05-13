@@ -28,6 +28,7 @@ public class Score{
 
     // * for highScore Screen
     public float minusHeight = 0;
+    public float plusWeight = 0;
 
     public Score(SpriteBatch batch) {
         setDigitTexture();
@@ -58,12 +59,12 @@ public class Score{
 
         if (score < 0) {
             negativeSignX = digitX;
-            batch.draw(negativeSignTexture, negativeSignX, negativeSignY-minusHeight, negativeSignWidth, negativeSignHeight);
+            batch.draw(negativeSignTexture, negativeSignX+plusWeight, negativeSignY-minusHeight, negativeSignWidth, negativeSignHeight);
             digitX += negativeSignWidth + negativeSignAndDigitGap;
         }
 
         while (!stack.empty()) {
-            batch.draw(digitTexture[stack.pop()], digitX, digitY-minusHeight, digitWidth, digitHeight);
+            batch.draw(digitTexture[stack.pop()], digitX+plusWeight, digitY-minusHeight, digitWidth, digitHeight);
             digitX += digitWidth;
         }
     }
