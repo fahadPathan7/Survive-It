@@ -62,9 +62,10 @@ public class AirWaterScreen implements Screen {
     public int pauseScreenX = 0;
     public int pauseScreenY = 0;
     public float pauseIconWidth = 60f;
-    public float pauseIconHeight = 50f;
+    public float pauseIconHeight = 55f;
     public float pauseIconX = 20f;
-    public float pauseIconY = Gdx.graphics.getHeight() - pauseIconHeight - 10f;
+    public float pauseIconExtraDistanceYAxis = 5f;
+    public float pauseIconY = Gdx.graphics.getHeight() - pauseIconHeight - pauseIconExtraDistanceYAxis;
     public boolean status  ;
     // pause screen ends
 
@@ -115,11 +116,15 @@ public class AirWaterScreen implements Screen {
 
         gameTime = new GameTime(); // creating GameTime object
 
+        Spell.setDigitTexture(); // creating texture to show spell remaining cnt on screen
+
         totalSpellCnt = 0;
         totalSpellMissCnt = 0;
         totalMonsterHitCnt = 0;
         totalMonsterMissCnt = 0;
         totalConsecutiveKillsCnt = 0;
+
+        Spell.totalSpellRemaining = 5;
 
         Monster.monsterVerticalSpeed = 50f;
         Monster.monsterHorizontalSpeed = 230f;
@@ -183,6 +188,8 @@ public class AirWaterScreen implements Screen {
 
         updateMonster();
 
+        updateSpellRemaining();
+
         updateSpell();
 
         updateBlast();
@@ -240,12 +247,17 @@ public class AirWaterScreen implements Screen {
         monsters.removeAll(monsterToRemove);
     }
 
+    public void updateSpellRemaining() {
+        Spell.updateSpellCnt();
+    }
+
     public void updateSpell() {
-        spellStateTime += Gdx.graphics.getDeltaTime();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.M) && spellStateTime >= spellPauseTime) {
+//        spellStateTime += Gdx.graphics.getDeltaTime();
+        if (Spell.totalSpellRemaining > 0 && Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             spells.add(new Spell(character.characterX, character.characterY, character.characterWidth,
                     character.characterHeight, character.inWater));
-            spellStateTime = 0f;
+//            spellStateTime = 0f;
+            Spell.totalSpellRemaining--;
 
             totalSpellCnt++;
         }
@@ -460,6 +472,8 @@ public class AirWaterScreen implements Screen {
 
         renderMonster();
 
+        renderSpellRemaining();
+
         renderSpell();
 
         renderBlast();
@@ -556,6 +570,10 @@ public class AirWaterScreen implements Screen {
         for (Monster monster : monsters) {
             monster.render(game.batch);
         }
+    }
+
+    public void renderSpellRemaining() {
+        Spell.renderSpellCnt(game.batch);
     }
 
     public void renderSpell() {

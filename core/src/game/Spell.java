@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.Stack;
+
 public class Spell implements ForObject{
     Collision collision; // to check if there is a collision with monsters
 
@@ -15,7 +17,7 @@ public class Spell implements ForObject{
     public float spellY;
     public float spellWidth;
     public float spellHeight;
-    public float spellSpeed = 100;
+    public float spellSpeed = 180f;
     public boolean spellRemove = false;
     public int spellType; // if the spell fire or freeze. (1 means fire. 0 means freeze)
     // spell variables ends
@@ -39,6 +41,21 @@ public class Spell implements ForObject{
     Animation freezeAnimation;
     TextureRegion freezeReg;
     // freeze variable ends
+
+    // digit starts
+    static Texture[] digitTexture;
+
+    public static int totalSpellRemaining = 5;
+    public static float newSpellCreateDelayTime = 2f;
+    public static float newSpellCreateStateTime = 0f;
+
+    public static int digitCnt = 10;
+    public static float digitExtraDistanceYAxis = 10f;
+    public static float digitWidth = 30f;
+    public static float digitHeight = 40f;
+    public static float digitX;
+    public static float digitY = Gdx.graphics.getHeight() - digitHeight - digitExtraDistanceYAxis;
+    // digit ends
 
     public Spell(float characterX, float characterY, float characterWidth, float characterHeight, boolean inWater) {
         if (inWater) {
@@ -121,5 +138,39 @@ public class Spell implements ForObject{
 
         batch.draw(freezeReg, spellX, spellY, spellWidth / 2, spellHeight / 2, spellWidth,
                 spellHeight,1,1,0); // drawing freeze animation
+    }
+
+    public static void updateSpellCnt() {
+        newSpellCreateStateTime += Gdx.graphics.getDeltaTime();
+        if (newSpellCreateStateTime >= newSpellCreateDelayTime) {
+            totalSpellRemaining++;
+            newSpellCreateStateTime = 0f;
+        }
+    }
+
+    public static void renderSpellCnt(SpriteBatch batch) {
+        int temp = totalSpellRemaining;
+
+        Stack<Integer> stack = new Stack<>();
+        while (temp > 0) {
+            stack.push(temp % 10);
+            temp /= 10;
+        }
+
+        if (stack.empty()) stack.push(0);
+
+        digitX = 100f;
+
+        while (!stack.empty()) {
+            batch.draw(digitTexture[stack.pop()], digitX, digitY, digitWidth, digitHeight);
+            digitX += digitWidth;
+        }
+    }
+
+    public static void setDigitTexture() {
+        digitTexture = new Texture[digitCnt];
+        for (int i = 0; i < digitCnt; i++) {
+            digitTexture[i] = new Texture("Digit\\" + i + ".png");
+        }
     }
 }
