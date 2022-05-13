@@ -92,6 +92,10 @@ public class EndScreen implements Screen {
         }
 
         if(showMute) game.batch.draw(mute, 1580, 830,100,100);
+        totalScore.digitWidth = 50f;
+        totalScore.digitHeight = 70f;
+        totalScore.negativeSignWidth = 50f;
+        totalScore.negativeSignHeight = 20f;
         totalScore.render(game.batch);
 
         game.batch.end();

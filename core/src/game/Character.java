@@ -13,8 +13,8 @@ public class Character implements ForObject {
     Collision collision; // for tracking collision of character with other objects
 
     // character variables starts
-    public float characterX = 50; // x-axis of character
-    public float characterY = 0; // y-axis of character
+    public float characterX = 50f; // x-axis of character
+    public float characterY; // y-axis of character (should be same as waterMinDistance)
     public float characterWaterWidth = 100; // character width when in water
     public float characterAirWidth = 70; // character width when in air
     public float characterWidth = characterWaterWidth; // initially character is in water
@@ -24,12 +24,13 @@ public class Character implements ForObject {
     // water, air divider starts
     public boolean inWater = true; // is the character in water or not? (initially in water)
     public boolean inAir = false; // is the character in air or not?
-    public float waterMinHeight = 0f; // the minimum height the character can go when in water
-    public float waterMaxHeight = Gdx.graphics.getHeight() / 2f - characterHeight; // the maximum height the character
+    public float waterMinDistance = 10f; // the minimum distance the character can go when in water
+    public float waterMaxDistance = Gdx.graphics.getHeight() / 2f - characterHeight; // the maximum distance the character
     // can go when in water.
-    public float airMinHeight = Gdx.graphics.getHeight() / 2f; // the minimum height the character can go when in water.
-    public float airMaxHeight = Gdx.graphics.getHeight() - characterHeight - 60f; // the maximum height the character can
-    // go when in air.
+    public float airMinDistance = Gdx.graphics.getHeight() / 2f; // the minimum distance the character can go when in water.
+    public float characterSafeDistanceInAirFromMaxHeight = 60f;
+    public float airMaxDistance = Gdx.graphics.getHeight() - characterHeight - characterSafeDistanceInAirFromMaxHeight; // the
+        // maximum distance the character can go when in air.
     public float safeDistanceFromAir = 6f; // to avoid unwanted collision with air objects
     public float safeDistanceFromWater = 6f; // to avoid unwanted collision with water objects
     // water, air divider ends
@@ -60,7 +61,7 @@ public class Character implements ForObject {
     public float jumpFrameDuration = jumpTime / jumpImgCnt; // frame duration for every texture
     public float jumpMaxHeight = Gdx.graphics.getHeight() / 2f - characterHeight - safeDistanceFromAir; // the maximum height
         // the character will go while jumping.
-    public float characterJumpSpeed = jumpMaxHeight / (jumpTime / 2); // character jump speed (fps)
+    public float characterJumpSpeed = (jumpMaxHeight - waterMinDistance) / (jumpTime / 2); // character jump speed (fps)
     public int jumpDirection = 0; // is he going upward or downward? 0 means upward. 1 means downward.
     public boolean jumpDelay = false; // is jumping executing or not? (other actions will be frozen while its true).
     // jump animation ends
@@ -70,6 +71,8 @@ public class Character implements ForObject {
     default constructor.
      */
     public Character() {
+        characterY = waterMinDistance;
+
         collision = new Collision(characterX, characterY, characterWidth, characterHeight); // creating object of
             // collision class to check for collision with objects.
 
@@ -116,7 +119,7 @@ public class Character implements ForObject {
             renderJumpAnimation(batch); // drawing jump animation
         }
         else {
-            if (characterY == 0 && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            if (characterY == waterMinDistance && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                 // it will jump now
 
                 jumpDirection = 0; // 0 means going upward. 1 means going downward.
@@ -125,12 +128,12 @@ public class Character implements ForObject {
                 renderJumpAnimation(batch); // drawing jump animation
                 SoundManager.jump.play();
             }
-            else if (characterY == 0) {
+            else if (characterY == waterMinDistance) {
                 // if the character y-axis is 0, by default it will start running.
 
                 renderRunAnimation(batch); // drawing run animation.
             }
-            else if (characterY >= airMinHeight) {
+            else if (characterY >= airMinDistance) {
                 // if the character is in air, it will start flying.
 
                 renderFlyAnimation(batch); // drawing fly animation.
@@ -156,7 +159,7 @@ public class Character implements ForObject {
 
             inWater = true; // it is in water.
             inAir = false; // leaving air
-            characterY = waterMinHeight; // setting character y-axis at the lowest point of water.
+            characterY = waterMinDistance; // setting character y-axis at the lowest point of water.
             characterWidth = characterWaterWidth; // setting character width as the width should be in water.
 
             SoundManager.surfaceChange.dispose();
@@ -168,7 +171,7 @@ public class Character implements ForObject {
 
             inAir = true; // it is in air.
             inWater = false; // leaving water.
-            characterY = airMinHeight; // // setting character y-axis at the lowest point of air.
+            characterY = airMinDistance; // // setting character y-axis at the lowest point of air.
             characterWidth = characterAirWidth; // setting character width as the width should be in air.
 
             SoundManager.surfaceChange.dispose();
@@ -203,16 +206,16 @@ public class Character implements ForObject {
         if (inWater) {
             // checking if the character is exceeded its limit in water.
 
-            if (characterY <= waterMinHeight) characterY = waterMinHeight;
-            else if (characterY >= waterMaxHeight - safeDistanceFromAir) characterY = waterMaxHeight - safeDistanceFromAir;
+            if (characterY <= waterMinDistance) characterY = waterMinDistance;
+            else if (characterY >= waterMaxDistance - safeDistanceFromAir) characterY = waterMaxDistance - safeDistanceFromAir;
         }
         else if (inAir) {
             // checking if the character is exceeding its limit in air.
 
-            if (characterY <= airMinHeight + safeDistanceFromWater) {
-                characterY = airMinHeight + safeDistanceFromWater;
+            if (characterY <= airMinDistance + safeDistanceFromWater) {
+                characterY = airMinDistance + safeDistanceFromWater;
             }
-            else if (characterY >= airMaxHeight) characterY = airMaxHeight;
+            else if (characterY >= airMaxDistance) characterY = airMaxDistance;
         }
     }
 

@@ -20,8 +20,8 @@ public class AirWaterScreen implements Screen {
 
     // monster starts
     ArrayList<Monster> monsters;
-    public float monsterMinLaunchTime = 1f;
-    public float monsterMaxLaunchTime = 4f;
+    public float monsterMinLaunchTime = 0.8f;
+    public float monsterMaxLaunchTime = 3f;
     public float monsterLaunchTime = 0f;
     // monster ends
 
@@ -31,7 +31,7 @@ public class AirWaterScreen implements Screen {
 
     // spell animation starts
     ArrayList<Spell> spells;
-    public float spellPauseTime = 0.7f;
+    public float spellPauseTime = 0f;
     public float spellStateTime = spellPauseTime;
     // spell animation ends
 
@@ -49,7 +49,8 @@ public class AirWaterScreen implements Screen {
 
     // background starts
     Texture background;
-    public float backgroundHorizontalSpeed = 160;
+    public float backgroundHorizontalSpeed = 150f;
+    public float backgroundHorizontalSpeedIncrement = 0.03f;
     public float background1X = 0;
     public float background2X;
     // background ends
@@ -117,6 +118,9 @@ public class AirWaterScreen implements Screen {
         totalSpellMissCnt = 0;
         totalMonsterHitCnt = 0;
         totalMonsterMissCnt = 0;
+
+        Monster.monsterVerticalSpeed = 50f;
+        Monster.monsterHorizontalSpeed = 230f;
     }
 
     @Override
@@ -269,6 +273,8 @@ public class AirWaterScreen implements Screen {
     }
 
     public void updateBackground() {
+        backgroundHorizontalSpeed += backgroundHorizontalSpeedIncrement;
+
         background1X -= backgroundHorizontalSpeed * Gdx.graphics.getDeltaTime();
         background2X -= backgroundHorizontalSpeed * Gdx.graphics.getDeltaTime();
 

@@ -67,6 +67,9 @@ public class HighScoreScreen implements Screen {
 
         game.batch.draw(background,0,0);
         if(showMute) game.batch.draw(mute, 1580, 830,100,100);
+
+        totalScore.digitWidth = 70f;
+        totalScore.digitHeight = 90f;
         totalScore.render(game.batch);
 
         game.batch.end();
