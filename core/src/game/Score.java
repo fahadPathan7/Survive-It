@@ -26,10 +26,10 @@ public class Score{
 
 
     // negative sign starts
-    public float negativeSignWidth = 30; // width of negative sign
-    public float negativeSignHeight = 10; // height of negative sign
+    public float negativeSignWidth = 30f; // width of negative sign
+    public float negativeSignHeight = 10f; // height of negative sign
     public float negativeSignX; // x-axis of negative sign
-    public float negativeSignExtraDistanceYAxis = digitExtraDistanceYAxis - digitHeight / 2f; // it is used to make the
+    public float negativeSignExtraDistanceYAxis = digitExtraDistanceYAxis + digitHeight / 2f; // it is used to make the
         // placement of negative sign in the middle of digits. (like -100)
     public float negativeSignY = Gdx.graphics.getHeight() - negativeSignExtraDistanceYAxis - negativeSignHeight / 2f; // y-axis of
         // negative sign
@@ -39,8 +39,8 @@ public class Score{
 
 
     // * for highScore Screen
-    public float extraYAxis = 0;
-    public float extraXAxis = 0;
+    public float extraYAxis = 0f;
+    public float extraXAxis = 0f;
 
 
     /*
